@@ -1,0 +1,4 @@
+[2025-11-27 21:14:35,328] 9 root - INFO - reading data
+[2025-11-27 21:14:35,623] 19 root - INFO - deleting duplicate rows
+[2025-11-27 21:14:35,824] 29 root - INFO - removing columns
+[2025-11-27 21:14:35,860] 40 root - INFO - removing rows with missing values

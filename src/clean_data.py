@@ -1,26 +1,39 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
+from exception.exception import customexception
+import sys
 
 # read the raw data and store as dataframe
 def readData():
-    df = pd.read_csv('./data/m_health_dataset.csv')
-    return df
+    try:
+        df = pd.read_csv('./data/m_health_dataset.csv')
+        return df
+    except Exception as e:
+        raise customexception(e,sys)
 
 # delete all duplicate rows of the dataframe
 def deleteDuplicateRows(df):
-    df.drop_duplicates(inplace=True)
-    return df
+    try:
+        df.drop_duplicates(inplace=True)
+        return df
+    except Exception as e:
+        raise customexception(e,sys)
 
 # remove columns not wanted for training
 def removeColumns(df):
-    columns_to_drop = [ 'mental_health_interview','Timestamp'] 
-    df_cols_removed = df.drop(columns=columns_to_drop)
-    return df_cols_removed
+    try:
+        columns_to_drop = [ 'mental_health_interview','Timestamp'] 
+        df_cols_removed = df.drop(columns=columns_to_drop)
+        return df_cols_removed
+    except Exception as e:
+        raise customexception(e,sys)
 
 # remove every row that has a nan value somewhere
 def removeNanRows(df):
-    df.dropna(inplace=True)
-    return df
+    try:
+        df.dropna(inplace=True)
+        return df
+    except Exception as e:
+        raise customexception(e,sys)
 
 if __name__ == "__main__":
     df = readData()

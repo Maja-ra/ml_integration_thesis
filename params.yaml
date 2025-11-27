@@ -1,6 +1,7 @@
 data: 
   cols_to_drop: [ 'mental_health_interview','Timestamp']
-  
+  y_column: 'treatment'
+
 base:
   random_seed: 42
 

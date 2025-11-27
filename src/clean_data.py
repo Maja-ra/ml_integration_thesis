@@ -8,6 +8,9 @@ from pathlib import Path
 
 yaml = YAML(typ="safe")
 
+params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
+cols_to_drop = params.data.cols_to_drop
+
 # read the raw data and store as dataframe
 def readData():
     try:
@@ -53,7 +56,7 @@ def saveCleanData(df):
         clean_data_dir = Path("data") / "clean_data"
         logging.info("saving clean data to {clean_data_dir}")
         clean_data_dir.mkdir(exist_ok=True)
-        df.to_csv(clean_data_dir)
+        df.to_csv(clean_data_dir / "clean_data.csv")
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys)
@@ -61,8 +64,7 @@ def saveCleanData(df):
 
 if __name__ == "__main__":
     logging.info("starting data cleaning:")
-    params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
-    cols_to_drop = params.data.cols_to_drop
+
     df = readData()
     df = deleteDuplicateRows(df)
     df = removeColumns(df, cols_to_drop)

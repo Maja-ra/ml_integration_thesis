@@ -16,3 +16,9 @@ logging.basicConfig(level=logging.INFO,
                     format="[%(asctime)s] %(lineno)d %(name)s - %(levelname)s - %(message)s"
                     
 )
+
+logging.basicConfig(level=logging.ERROR, 
+                    filename=LOG_FILEPATH,
+                    format="[%(asctime)s] %(lineno)d %(name)s - %(levelname)s - %(message)s"
+                    
+)

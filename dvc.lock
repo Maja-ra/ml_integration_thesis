@@ -1,0 +1,46 @@
+schema: '2.0'
+stages:
+  clean:
+    cmd: python src/clean_data.py
+    deps:
+    - path: data/m_health_dataset.csv
+      hash: md5
+      md5: a0ffd0ee1958741131c563c5829d0df2
+      size: 24647848
+    - path: src/clean_data.py
+      hash: md5
+      md5: 88426b9044cb051dc6bf547d5a563984
+      size: 2089
+    outs:
+    - path: data/clean_data/clean_data.csv
+      hash: md5
+      md5: cdaea9956c94639fccea0eec01e2483a
+      size: 21361434
+  prepare:
+    cmd: python src/prepare_data.py
+    deps:
+    - path: data/clean_data/clean_data.csv
+      hash: md5
+      md5: cdaea9956c94639fccea0eec01e2483a
+      size: 21361434
+    - path: src/prepare_data.py
+      hash: md5
+      md5: cf780c37acd9a9150486d76c5c6062ec
+      size: 3016
+    outs:
+    - path: data/test_data/X_test.npy
+      hash: md5
+      md5: afc9a35cae384963f8ee3890c6170472
+      size: 8216168
+    - path: data/test_data/y_test.csv
+      hash: md5
+      md5: 719c869e48c11f98a9410c4c758b20e6
+      size: 651583
+    - path: data/train_data/X_train.npy
+      hash: md5
+      md5: f949276a2b69616b185828f52fdd34e4
+      size: 19170608
+    - path: data/train_data/y_train.csv
+      hash: md5
+      md5: 3994a17f4cb42a4aac844591c5624428
+      size: 1519541

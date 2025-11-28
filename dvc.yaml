@@ -1,0 +1,44 @@
+stages:
+  clean:
+    cmd: python src/clean_data.py
+    deps:
+      - data/m_health_dataset.csv
+      - src/clean_data.py
+    outs: #Stage outputs are files (or directories) written by pipelines
+      - data/clean_data/clean_data.csv
+  prepare: 
+    cmd: python src/prepare_data.py
+    deps:
+      - data/clean_data/clean_data.csv
+      - src/prepare_data.py
+    outs:
+      - data/test_data/X_test.npy
+      - data/train_data/X_train.npy
+      - data/test_data/y_test.csv
+      - data/train_data/y_train.csv
+  # train:
+  #   cmd: python src/train_model.py
+  #   deps:
+  #     - src/train_model.py
+  #     - data/train_data
+  #   params: # from params.yaml
+  #     - learning_rate
+  #     - nn.epochs
+  #     - nn.batch_size
+  #     - base
+  #     - train
+  #   outs:
+  #   - models/model.pkl
+  #   - models/model.pth
+  #   - results/train
+  # evaluate:
+  #   cmd: python src/evaluate.py
+  #   deps:
+  #   - data/test_data
+  #   - models/model.pkl
+  #   - src/evaluate.py
+  #   params:
+  #   - base
+  #   - evaluate
+  #   outs:
+  #   - results/evaluate

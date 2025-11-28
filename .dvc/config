@@ -1,2 +1,6 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = C:/Users/Maja/fake_remote
 
 

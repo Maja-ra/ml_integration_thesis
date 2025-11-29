@@ -9,7 +9,7 @@ from sklearn.linear_model import LogisticRegression
 # Load environment variables from .env file
 load_dotenv(".databricks/.databricks.env")
 
-exp_name = "/Users/majathe.rapp@gmail.com/test"
+exp_name = "/Users/majathe.rapp@gmail.com/thesis_log_reg"
 
 params = {
     "solver": "lbfgs",
@@ -37,12 +37,18 @@ def connectToExperiment(name):
 
 if __name__ == "__main__":
     print(f"Start Experiment in {exp_name}")
-    #connectToExperiment()
+    connectToExperiment(exp_name)
+
+    # Enable autologging for scikit-learn
+    mlflow.sklearn.autolog()
 
     X_train,  X_test,  y_train,  y_test = reusableFunctions.loadTrainTestData()
 
-    model = LogisticRegression(max_iter=params["max_iter"], random_state=params["random_state"], solver=params["solver"])
-    model.fit(X_train, y_train)
+    try:
+        model = LogisticRegression(max_iter=params["max_iter"], random_state=params["random_state"], solver=params["solver"])
+        model.fit(X_train, y_train)
+    except Exception as e:
+        print(e)
 
     pred = model.predict(X_test)
 

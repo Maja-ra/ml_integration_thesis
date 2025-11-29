@@ -69,10 +69,10 @@ def splitTestTrain(X_scaled, y):
         test_data_dir.mkdir(exist_ok=True)
 
         np.save(train_data_dir / "X_train.npy", X_train) # is numpy array because of scaling
-        y_train.to_csv(train_data_dir / "y_train.csv")
+        y_train.to_csv(train_data_dir / "y_train.csv", index_label = False)
 
         np.save(test_data_dir / "X_test.npy", X_test)
-        y_test.to_csv(test_data_dir / "y_test.csv")
+        y_test.to_csv(test_data_dir / "y_test.csv", index_label = False)
 
     except Exception as e:
         logging.error(e)

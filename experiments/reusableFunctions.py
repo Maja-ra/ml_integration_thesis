@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def loadData():
+def loadTrainTestData():
     try:
         X_train = np.load('./data/train_data/X_train.npy')
         X_test = np.load('./data/test_data/X_test.npy')
@@ -16,7 +16,7 @@ def loadData():
 if __name__ == "__main__":
     print(f"Loading training and test data")
 
-    X_train,  X_test,  y_train,  y_test = loadData()
+    X_train,  X_test,  y_train,  y_test = loadTrainTestData()
 
     #print(X_train[0:5])
     #print(y_test.head())

@@ -1,6 +1,9 @@
 [core]
-    remote = myremote
+    remote = origin
 ['remote "myremote"']
     url = C:/Users/Maja/fake_remote
-
-
+['remote "s3"']
+    url = s3://dvc
+    endpointurl = https://dagshub.com/Maja-ra/ml_integration_thesis.s3
+['remote "origin"']
+    url = https://dagshub.com/Maja-ra/ml_integration_thesis.dvc

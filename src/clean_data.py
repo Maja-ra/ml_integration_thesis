@@ -56,7 +56,7 @@ def saveCleanData(df):
         clean_data_dir = Path("data") / "clean_data"
         logging.info("saving clean data to {clean_data_dir}")
         clean_data_dir.mkdir(exist_ok=True)
-        df.to_csv(clean_data_dir / "clean_data.csv")
+        df.to_csv(clean_data_dir / "clean_data.csv", index = False)
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys)

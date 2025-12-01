@@ -49,6 +49,6 @@ if __name__ == "__main__":
     clean_data = reusableFunctions.loadCleanData()
     X_train,  X_test,  y_train,  y_test = reusableFunctions.loadTrainTestData()
 
-    model = GradientBoostingClassifier(n_estimators= params["n_estimators"], learning_rate= params["learning_rate"], max_depth= params["max_depth"], random_state= params["max_depth"])
+    model = GradientBoostingClassifier(n_estimators= params["n_estimators"], learning_rate= params["learning_rate"], max_depth= params["max_depth"], random_state= params["random_state"])
 
     reusableFunctions.mlflowTrain(model, clean_data, X_train,  X_test,  y_train,  y_test, params)

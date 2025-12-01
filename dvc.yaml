@@ -46,3 +46,4 @@ stages:
     - evaluate
     outs:
     - results/evaluate
+    - models/model.onnx

@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import sys
 from pathlib import Path
 from matplotlib import pyplot as plt
+from skl2onnx import to_onnx
 
 from ruamel.yaml import YAML
 from box import ConfigBox
@@ -68,7 +69,6 @@ def createConfusionMatrix(y_test, pred):
 def modelExplanation(y_test, pred):
     pass
 
-
 if __name__ == "__main__":
     # load the model from disk
     logging.info("starting model evaluation:")
@@ -88,6 +88,14 @@ if __name__ == "__main__":
 
     if conf_matrix_bool == "yes":
         createConfusionMatrix(y_test, pred)
-    
+
+    try:
+    # Convert into ONNX format.
+        onx = to_onnx(loaded_model, X_test[:1])
+        with open("models/model.onnx", "wb") as f:
+            f.write(onx.SerializeToString())
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys)   
 
 

@@ -112,13 +112,17 @@ stages:
       size: 379930
     - path: src/evaluate_model.py
       hash: md5
-      md5: 82524d3de4243b6b11e15fbbe72d91a3
-      size: 2753
+      md5: 8240717894a86c8a5a84bc4d4bf53aaf
+      size: 3062
     params:
       params.yaml:
         evaluate:
           conf_matrix: yes
     outs:
+    - path: models/model.onnx
+      hash: md5
+      md5: 94863f0c8d9681a37ffee5508959ced0
+      size: 198610
     - path: results/evaluate
       hash: md5
       md5: 54fff44237fb172f7bcedb4cbee79c56.dir

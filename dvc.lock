@@ -11,6 +11,13 @@ stages:
       hash: md5
       md5: 0ca4d9b362afe591fd74fc4af2ebff2d
       size: 2104
+    params:
+      params.yaml:
+        data:
+          cols_to_drop:
+          - mental_health_interview
+          - Timestamp
+          y_column: treatment
     outs:
     - path: data/clean_data/clean_data.csv
       hash: md5
@@ -27,10 +34,21 @@ stages:
       hash: md5
       md5: 98646c2f84e940c28e1aa9c4ba45c65a
       size: 3046
+    params:
+      params.yaml:
+        base:
+          random_seed: 42
+        data:
+          cols_to_drop:
+          - mental_health_interview
+          - Timestamp
+          y_column: treatment
+        data_split:
+          test_size: 0.3
     outs:
     - path: data/test_data/X_test.npy
       hash: md5
-      md5: fd62476007b87cb7ea65ef96004218df
+      md5: e6b13c27943d9b720074fb4de12a1f22
       size: 7668432
     - path: data/test_data/y_test.csv
       hash: md5
@@ -38,9 +56,71 @@ stages:
       size: 205412
     - path: data/train_data/X_train.npy
       hash: md5
-      md5: 8bdea039d7faff3a026b2df9c642cf22
+      md5: 4e8e3be89917df4bffd2e23356912e66
       size: 17892576
     - path: data/train_data/y_train.csv
       hash: md5
       md5: 62b5d6f11a35608d6ac6a92c2f64eb75
       size: 479273
+  train:
+    cmd: python src/train_model.py
+    deps:
+    - path: data/train_data/X_train.npy
+      hash: md5
+      md5: 4e8e3be89917df4bffd2e23356912e66
+      size: 17892576
+    - path: data/train_data/y_train.csv
+      hash: md5
+      md5: 62b5d6f11a35608d6ac6a92c2f64eb75
+      size: 479273
+    - path: src/train_model.py
+      hash: md5
+      md5: 783451654303995bf801d1b61c271ac9
+      size: 2052
+    params:
+      params.yaml:
+        base:
+          random_seed: 42
+        data:
+          cols_to_drop:
+          - mental_health_interview
+          - Timestamp
+          y_column: treatment
+        train:
+          max_depth: 9
+          n_estimators: 9
+          learning_rate": 0.1
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: dce3675ca608ca290da4129a82d088ed
+      size: 379930
+  evaluate:
+    cmd: python src/evaluate_model.py
+    deps:
+    - path: data/test_data/X_test.npy
+      hash: md5
+      md5: e6b13c27943d9b720074fb4de12a1f22
+      size: 7668432
+    - path: data/train_data/y_train.csv
+      hash: md5
+      md5: 62b5d6f11a35608d6ac6a92c2f64eb75
+      size: 479273
+    - path: models/model.pkl
+      hash: md5
+      md5: dce3675ca608ca290da4129a82d088ed
+      size: 379930
+    - path: src/evaluate_model.py
+      hash: md5
+      md5: 82524d3de4243b6b11e15fbbe72d91a3
+      size: 2753
+    params:
+      params.yaml:
+        evaluate:
+          conf_matrix: yes
+    outs:
+    - path: results/evaluate
+      hash: md5
+      md5: 54fff44237fb172f7bcedb4cbee79c56.dir
+      size: 20281
+      nfiles: 2

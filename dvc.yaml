@@ -34,7 +34,6 @@ stages:
       - train
     outs:
     - models/model.pkl
-    - models/model.pth
     #- results/train
   evaluate:
     cmd: python src/evaluate_model.py

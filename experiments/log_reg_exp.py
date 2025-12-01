@@ -109,7 +109,7 @@ if __name__ == "__main__":
             #     model_type="classifier",
             # )
 
-            print(eval_params)
+            # print(eval_params)
             mlflow.log_metrics(eval_params["weighted avg"])
             mlflow.log_metric("accuracy", eval_params["accuracy"])
             #mlflow.log_metrics(result.metrics)

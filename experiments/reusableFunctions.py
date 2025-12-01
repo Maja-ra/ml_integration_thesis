@@ -6,6 +6,7 @@ from ruamel.yaml import YAML
 import numpy as np
 import dvc.api
 import mlflow
+from mlflow.models import infer_signature
 from pathlib import Path
 import dagshub
 from dotenv import load_dotenv
@@ -155,6 +156,38 @@ def evaluateModel(y_test, pred):
     print(classification_report(y_test, pred))
 
 
+def mlflowTrain(model, clean_data, X_train,  X_test,  y_train,  y_test, model_params):
+    try: 
+        dvc_url_clean = getDvcDatasetVersion("clean_data", "clean_data.csv")
+        dvc_url_train = getDvcDatasetVersion("train_data", "X_train.npy")
+        dvc_url_test = getDvcDatasetVersion("test_data", "X_test.npy")
+
+        dvc_params = {'dvc_clean_data_url': dvc_url_clean, 'dvc_train_data_url': dvc_url_train, 'dvc_test_data_url': dvc_url_test}
+
+        with mlflow.start_run():
+            model.fit(X_train, y_train)
+
+            dataset, dataset_train, dataset_test = mlflowSetDatasets(clean_data, X_train,  X_test,  y_train,  y_test)
+
+            mlflow.log_params(dvc_params)
+            mlflow.log_params(model_params)
+            mlflow.log_input(dataset, context="clean data")
+            mlflow.log_input(dataset_train, context="training")
+            mlflow.log_input(dataset_test, context="testing")
+
+            pred = model.predict(X_test)
+            evaluateModel(y_test, pred) # prints evaluation report
+
+            signature = infer_signature(X_train[:1], y_train[:1])      # creates input example to validate and insure consistent input, X_test, model.predict(X_test)
+            #print(signature)    
+
+            eval_params = classification_report(y_test, pred, output_dict=True)
+
+            mlflow.log_metrics(eval_params["weighted avg"])
+            mlflow.log_metric("accuracy", eval_params["accuracy"])
+
+    except Exception as e:
+        print(e)
 
 
 if __name__ == "__main__":

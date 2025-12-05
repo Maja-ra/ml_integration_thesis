@@ -40,10 +40,12 @@ stages:
     deps:
     - data/test_data/X_test.npy
     - data/train_data/y_train.csv
+    - data/clean_data/clean_data.csv
     - models/model.pkl
     - src/evaluate_model.py
     params:
     - evaluate
+    - data
     outs:
     - results/evaluate
     - models/model.onnx

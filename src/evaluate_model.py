@@ -64,6 +64,7 @@ def createConfusionMatrix(y_test, pred):
 
         logging.info("saving confusion matrix to " + str(eval_results_dir))
         plt.savefig(str(eval_results_dir) + "/" + "confusion_matrix.png")
+        plt.close()
 
     except Exception as e:
         logging.error(e)
@@ -92,6 +93,7 @@ def modelExplanation(ada_model, X_test):
 
         logging.info("saving model explanation to " + str(eval_results_dir))
         plt.savefig(str(eval_results_dir) + "/" + "model_explanation.png")
+        plt.close()
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys) 

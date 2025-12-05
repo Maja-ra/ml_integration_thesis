@@ -20,8 +20,10 @@ yaml = YAML(typ="safe")
 
 params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
 conf_matrix_bool = params.evaluate.conf_matrix
+expl_plot_bool = params.evaluate.expl_plot
 y_column = params.data.y_column
 num_features = params.data.num_features
+features_used = params.data.features_used
 
 
 eval_results_dir = Path("results") / "evaluate"
@@ -78,20 +80,11 @@ def modelExplanation(ada_model, X_test):
     try:
         eval_results_dir.mkdir(exist_ok=True)
 
-        clean_data_dir = Path("data") / "clean_data"
-        with open(clean_data_dir / 'clean_data.csv', 'r') as f:
-            dict_reader = csv.DictReader(f)
-
-            #get header fieldnames from DictReader and store in list
-            headers = dict_reader.fieldnames
-
-        headers.remove(y_column)
-
         explainer = shap.TreeExplainer(ada_model)
         shap_values = explainer.shap_values(X_test)
 
         # Plot feature importance using SHAP values
-        shap.summary_plot(shap_values, X_test, feature_names=headers, show=False)
+        shap.summary_plot(shap_values, X_test, feature_names=features_used, show=False)
 
         logging.info("saving model explanation to " + str(eval_results_dir))
         plt.savefig(str(eval_results_dir) + "/" + "model_explanation.png")
@@ -117,10 +110,11 @@ if __name__ == "__main__":
 
     evaluateModel(y_test, pred)
 
-    if conf_matrix_bool == "yes":
+    if conf_matrix_bool:
         createConfusionMatrix(y_test, pred)
 
-    modelExplanation(loaded_model, X_test)
+    if expl_plot_bool:
+        modelExplanation(loaded_model, X_test)
 
     try:
     # Convert into ONNX format.

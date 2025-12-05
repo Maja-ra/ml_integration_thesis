@@ -11,12 +11,13 @@ from ruamel.yaml import YAML
 import numpy as np
 
 yaml = YAML(typ="safe")
-
-params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
+yaml_name = "params.yaml"
+params = ConfigBox(yaml.load(open(yaml_name, encoding="utf-8")))
 y_column = params.data.y_column
 random_seed = params.base.random_seed
 test_size = params.data_split.test_size
-num_features = params.data.num_features
+
+
 
 def loadCleanData():
     try:
@@ -78,6 +79,24 @@ def splitTestTrain(X_scaled, y):
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys)   
+    
+def saveFeatureInfo(X_columns):
+    try:
+        with open(yaml_name) as f :
+            doc = yaml.load(f)     
+
+        doc["data"]["features_used"] = list(X_columns)
+        doc["data"]["num_features"] = len(X_columns)
+
+        with open(yaml_name, 'w',) as f :
+            #yaml.dump(feature_info_dict,f) 
+            yaml.dump(doc,f) 
+
+        logging.info(f'Written features_used and num_features to params.yaml successfully')
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys) 
+
 
 
 if __name__ == "__main__":
@@ -89,9 +108,8 @@ if __name__ == "__main__":
     X = df.drop(y_column, axis=1)
     y = df[y_column]                # 'treatment'
 
-    if len(df.columns) != num_features:
-        logging.warning("The number of features does not equal the specified number in params.yaml. This might lead to a conflict, as the number is specified in the model.onx input.")
+    saveFeatureInfo(X.columns)   # dynamically updates the features used in training so the info can be accessed for the model
 
     X_scaled = scaleData(X)
 
-    splitTestTrain(X_scaled, y)
+    splitTestTrain(X_scaled, y) #and save data

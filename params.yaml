@@ -1,18 +1,11 @@
-data: 
-  cols_to_drop: [ 'mental_health_interview','Timestamp']
-  y_column: 'treatment'
-  num_features: 15
-
-base:
-  random_seed: 42
-
-data_split:
-  test_size: 0.3
-
-train:
-  max_depth: 9
-  n_estimators: 9
-  learning_rate": 0.1
-
-evaluate:
-  conf_matrix: "yes"
+base: {random_seed: 42}
+data:
+  cols_to_drop: [mental_health_interview, Timestamp]
+  features_used: [Gender, Country, Occupation, self_employed, family_history, Days_Indoors,
+    Growing_Stress, Changes_Habits, Mental_Health_History, Mood_Swings, Coping_Struggles,
+    Work_Interest, Social_Weakness, care_options]
+  num_features: 14
+  y_column: treatment
+data_split: {test_size: 0.3}
+evaluate: {conf_matrix: yes, expl_plot: yes}
+train: {learning_rate": 0.1, max_depth: 9, n_estimators: 9}

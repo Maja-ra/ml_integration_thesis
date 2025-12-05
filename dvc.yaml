@@ -40,7 +40,6 @@ stages:
     deps:
     - data/test_data/X_test.npy
     - data/test_data/y_test.csv
-    - data/clean_data/clean_data.csv
     - models/model.pkl
     - src/evaluate_model.py
     params:

@@ -17,8 +17,23 @@ stages:
           cols_to_drop:
           - mental_health_interview
           - Timestamp
+          features_used:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          num_features: 14
           y_column: treatment
-          num_features: 15
     outs:
     - path: data/clean_data/clean_data.csv
       hash: md5
@@ -33,8 +48,8 @@ stages:
       size: 19872675
     - path: src/prepare_data.py
       hash: md5
-      md5: 4dca4a9c51dc7c3db1ec70f798ff426e
-      size: 3315
+      md5: 0d1b2e91a0c2563d5965d24d401843c1
+      size: 3763
     params:
       params.yaml:
         base:
@@ -43,8 +58,23 @@ stages:
           cols_to_drop:
           - mental_health_interview
           - Timestamp
+          features_used:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          num_features: 14
           y_column: treatment
-          num_features: 15
         data_split:
           test_size: 0.3
     outs:
@@ -87,12 +117,27 @@ stages:
           cols_to_drop:
           - mental_health_interview
           - Timestamp
+          features_used:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          num_features: 14
           y_column: treatment
-          num_features: 15
         train:
+          learning_rate": 0.1
           max_depth: 9
           n_estimators: 9
-          learning_rate": 0.1
     outs:
     - path: models/model.pkl
       hash: md5
@@ -101,10 +146,6 @@ stages:
   evaluate:
     cmd: python src/evaluate_model.py
     deps:
-    - path: data/clean_data/clean_data.csv
-      hash: md5
-      md5: 3d54cbd85fe75da4dc170664b30af0e0
-      size: 19872675
     - path: data/test_data/X_test.npy
       hash: md5
       md5: e6b13c27943d9b720074fb4de12a1f22
@@ -119,25 +160,41 @@ stages:
       size: 379930
     - path: src/evaluate_model.py
       hash: md5
-      md5: d7f6f037a74dcaef9403f6cea2d24a02
-      size: 4439
+      md5: 601ba9588a6c699a82f32821f60fbb1d
+      size: 4231
     params:
       params.yaml:
         data:
           cols_to_drop:
           - mental_health_interview
           - Timestamp
+          features_used:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          num_features: 14
           y_column: treatment
-          num_features: 15
         evaluate:
           conf_matrix: yes
+          expl_plot: yes
     outs:
     - path: models/model.onnx
       hash: md5
-      md5: 0364cf5a525a55d6967681d015f627fb
+      md5: 2cbfc990836a9901e18f5b2e9bad23d7
       size: 198634
     - path: results/evaluate
       hash: md5
-      md5: 67bcc1283e2dc237c85cc5708cc31c7a.dir
-      size: 94821
+      md5: 51623d0e4bfbaa2c3606b43adf83ee87.dir
+      size: 94337
       nfiles: 3

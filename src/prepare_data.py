@@ -29,10 +29,10 @@ def loadCleanData():
         logging.error(e)
         raise customexception(e,sys)   
 
-def encodeCategoricalData(df):
+def encodeCategoricalData(df, categorical_columns):
     try:
         logging.info("encoding categorical data")
-        categorical_columns = df.select_dtypes(include="object").columns
+        
         for column in categorical_columns:
             label_encoder = LabelEncoder()
             if column == 'treatment':
@@ -80,13 +80,14 @@ def splitTestTrain(X_scaled, y):
         logging.error(e)
         raise customexception(e,sys)   
     
-def saveFeatureInfo(X_columns):
+def saveFeatureInfo(X_columns, categorical_columns):
     try:
         with open(yaml_name) as f :
             doc = yaml.load(f)     
 
         doc["data"]["features_used"] = list(X_columns)
         doc["data"]["num_features"] = len(X_columns)
+        doc["data"]["categorical_columns"] = list(categorical_columns)
 
         with open(yaml_name, 'w',) as f :
             #yaml.dump(feature_info_dict,f) 
@@ -103,12 +104,13 @@ if __name__ == "__main__":
     logging.info("starting data preparation for ml training:")
 
     df = loadCleanData()
-    df = encodeCategoricalData(df)
+    categorical_columns = df.select_dtypes(include="object").columns
+    df = encodeCategoricalData(df, categorical_columns)
 
     X = df.drop(y_column, axis=1)
     y = df[y_column]                # 'treatment'
 
-    saveFeatureInfo(X.columns)   # dynamically updates the features used in training so the info can be accessed for the model
+    saveFeatureInfo(X.columns, categorical_columns)   # dynamically updates the features used in training so the info can be accessed for the model
 
     X_scaled = scaleData(X)
 

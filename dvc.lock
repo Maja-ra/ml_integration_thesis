@@ -48,13 +48,29 @@ stages:
       size: 19872675
     - path: src/prepare_data.py
       hash: md5
-      md5: 0d1b2e91a0c2563d5965d24d401843c1
-      size: 3763
+      md5: 27d37d8d3e604f20b548d1f1d90309c3
+      size: 3925
     params:
       params.yaml:
         base:
           random_seed: 42
         data:
+          categorical_columns:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - treatment
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
           cols_to_drop:
           - mental_health_interview
           - Timestamp
@@ -114,6 +130,22 @@ stages:
         base:
           random_seed: 42
         data:
+          categorical_columns:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - treatment
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
           cols_to_drop:
           - mental_health_interview
           - Timestamp
@@ -165,6 +197,22 @@ stages:
     params:
       params.yaml:
         data:
+          categorical_columns:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - treatment
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
           cols_to_drop:
           - mental_health_interview
           - Timestamp
@@ -191,10 +239,10 @@ stages:
     outs:
     - path: models/model.onnx
       hash: md5
-      md5: 2cbfc990836a9901e18f5b2e9bad23d7
+      md5: bebe8ccf3c690f64e1a6d03c2ebe89ed
       size: 198634
     - path: results/evaluate
       hash: md5
-      md5: 51623d0e4bfbaa2c3606b43adf83ee87.dir
-      size: 94337
+      md5: 23fbfabe9ee5ce322a3af3c2a8ab5cf6.dir
+      size: 94617
       nfiles: 3

@@ -1,5 +1,8 @@
 base: {random_seed: 42}
 data:
+  categorical_columns: [Gender, Country, Occupation, self_employed, family_history,
+    treatment, Days_Indoors, Growing_Stress, Changes_Habits, Mental_Health_History,
+    Mood_Swings, Coping_Struggles, Work_Interest, Social_Weakness, care_options]
   cols_to_drop: [mental_health_interview, Timestamp]
   features_used: [Gender, Country, Occupation, self_employed, family_history, Days_Indoors,
     Growing_Stress, Changes_Habits, Mental_Health_History, Mood_Swings, Coping_Struggles,

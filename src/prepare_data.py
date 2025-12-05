@@ -16,6 +16,7 @@ params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
 y_column = params.data.y_column
 random_seed = params.base.random_seed
 test_size = params.data_split.test_size
+num_features = params.data.num_features
 
 def loadCleanData():
     try:
@@ -87,6 +88,9 @@ if __name__ == "__main__":
 
     X = df.drop(y_column, axis=1)
     y = df[y_column]                # 'treatment'
+
+    if len(df.columns) != num_features:
+        logging.warning("The number of features does not equal the specified number in params.yaml. This might lead to a conflict, as the number is specified in the model.onx input.")
 
     X_scaled = scaleData(X)
 

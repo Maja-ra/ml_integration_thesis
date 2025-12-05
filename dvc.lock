@@ -18,6 +18,7 @@ stages:
           - mental_health_interview
           - Timestamp
           y_column: treatment
+          num_features: 15
     outs:
     - path: data/clean_data/clean_data.csv
       hash: md5
@@ -32,8 +33,8 @@ stages:
       size: 19872675
     - path: src/prepare_data.py
       hash: md5
-      md5: 98646c2f84e940c28e1aa9c4ba45c65a
-      size: 3046
+      md5: 4dca4a9c51dc7c3db1ec70f798ff426e
+      size: 3315
     params:
       params.yaml:
         base:
@@ -43,6 +44,7 @@ stages:
           - mental_health_interview
           - Timestamp
           y_column: treatment
+          num_features: 15
         data_split:
           test_size: 0.3
     outs:
@@ -86,6 +88,7 @@ stages:
           - mental_health_interview
           - Timestamp
           y_column: treatment
+          num_features: 15
         train:
           max_depth: 9
           n_estimators: 9
@@ -98,33 +101,43 @@ stages:
   evaluate:
     cmd: python src/evaluate_model.py
     deps:
+    - path: data/clean_data/clean_data.csv
+      hash: md5
+      md5: 3d54cbd85fe75da4dc170664b30af0e0
+      size: 19872675
     - path: data/test_data/X_test.npy
       hash: md5
       md5: e6b13c27943d9b720074fb4de12a1f22
       size: 7668432
-    - path: data/train_data/y_train.csv
+    - path: data/test_data/y_test.csv
       hash: md5
-      md5: 62b5d6f11a35608d6ac6a92c2f64eb75
-      size: 479273
+      md5: c0d740e52df67c9410a9d9460e5c0959
+      size: 205412
     - path: models/model.pkl
       hash: md5
       md5: dce3675ca608ca290da4129a82d088ed
       size: 379930
     - path: src/evaluate_model.py
       hash: md5
-      md5: cdb0727968d9f9ad9a9909ec1e59c1d5
-      size: 4123
+      md5: d7f6f037a74dcaef9403f6cea2d24a02
+      size: 4439
     params:
       params.yaml:
+        data:
+          cols_to_drop:
+          - mental_health_interview
+          - Timestamp
+          y_column: treatment
+          num_features: 15
         evaluate:
           conf_matrix: yes
     outs:
     - path: models/model.onnx
       hash: md5
-      md5: 94863f0c8d9681a37ffee5508959ced0
-      size: 198610
+      md5: 0364cf5a525a55d6967681d015f627fb
+      size: 198634
     - path: results/evaluate
       hash: md5
-      md5: c5da85742ca04e97ffb200e67dd4ecb9.dir
-      size: 94668
+      md5: 67bcc1283e2dc237c85cc5708cc31c7a.dir
+      size: 94821
       nfiles: 3

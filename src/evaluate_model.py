@@ -3,11 +3,12 @@ import numpy as np
 import pandas as pd
 from logger.logger import logging
 from exception.exception import customexception
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay, f1_score
 import sys
 from pathlib import Path
 from matplotlib import pyplot as plt
-from skl2onnx import to_onnx
+from skl2onnx import convert_sklearn, update_registered_converter
+from skl2onnx.common.data_types import FloatTensorType
 
 from ruamel.yaml import YAML
 from box import ConfigBox
@@ -20,6 +21,7 @@ yaml = YAML(typ="safe")
 params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
 conf_matrix_bool = params.evaluate.conf_matrix
 y_column = params.data.y_column
+num_features = params.data.num_features
 
 
 eval_results_dir = Path("results") / "evaluate"
@@ -36,10 +38,10 @@ def loadTestData():
         raise customexception(e,sys) 
 
 def evaluateModel(y_test, pred):
-    logging.info("Results: ", accuracy_score(y_test, pred), classification_report(y_test, pred))
+    logging.info("Results: accuracy = " + str(accuracy_score(y_test, pred)) + ", f1 = " + str(f1_score(y_test, pred)))
     try:
-        print("Accuracy:", accuracy_score(y_test, pred))
-        print(classification_report(y_test, pred))
+        #print("Accuracy:", accuracy_score(y_test, pred))
+        #print(classification_report(y_test, pred))
 
         report = classification_report(y_test, pred, output_dict=True)
         df_report = pd.DataFrame(report).transpose()
@@ -122,7 +124,10 @@ if __name__ == "__main__":
 
     try:
     # Convert into ONNX format.
-        onx = to_onnx(loaded_model, X_test[:1])
+        num_features = num_features
+        initial_type = [("feature_input", FloatTensorType([None, num_features]))]
+        onx = convert_sklearn(loaded_model, initial_types = initial_type)
+
         with open("models/model.onnx", "wb") as f:
             f.write(onx.SerializeToString())
     except Exception as e:

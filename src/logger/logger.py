@@ -22,3 +22,9 @@ logging.basicConfig(level=logging.ERROR,
                     format="[%(asctime)s] %(lineno)d %(name)s - %(levelname)s - %(message)s"
                     
 )
+
+logging.basicConfig(level=logging.WARNING, 
+                    filename=LOG_FILEPATH,
+                    format="[%(asctime)s] %(lineno)d %(name)s - %(levelname)s - %(message)s"
+                    
+)

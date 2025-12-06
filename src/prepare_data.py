@@ -1,7 +1,10 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 from logger.logger import logging
 from exception.exception import customexception
 import sys
@@ -9,6 +12,8 @@ from pathlib import Path
 from box import ConfigBox
 from ruamel.yaml import YAML
 import numpy as np
+import pickle
+# from scipy import sparse
 
 yaml = YAML(typ="safe")
 yaml_name = "params.yaml"
@@ -18,6 +23,56 @@ random_seed = params.base.random_seed
 test_size = params.data_split.test_size
 
 
+
+def definePipeline(all_columns, categorical_columns):
+    try:
+        numerical_columns = [col for col in all_columns if col not in categorical_columns]
+
+        numeric_preprocessor = Pipeline(
+            steps=[
+                ("imputation_mean", SimpleImputer(missing_values=np.nan, strategy="mean")),
+                #("scaler", StandardScaler()),
+            ]
+        )
+
+        categorical_preprocessor = Pipeline(
+            steps=[
+                (
+                    "imputation_constant",
+                    SimpleImputer(fill_value="missing", strategy="constant"),
+                ),
+                ("onehot", OneHotEncoder(sparse_output = False, handle_unknown="ignore")),       # handle_unknown="ignore"
+                #("scaler", StandardScaler()),
+            ]
+        )
+
+        col_transformer = ColumnTransformer(
+            transformers = [
+                ("categorical",categorical_preprocessor, categorical_columns),
+                ("numerical", numeric_preprocessor, numerical_columns),
+            ]
+        )
+
+        preprocessor = Pipeline(
+            steps = [
+                ("column transformer", col_transformer),
+                ("scaler", StandardScaler()),                   # with_mean=False
+            ]
+        )
+
+        cat_preprocessor = Pipeline(
+            steps=[
+                ("onehot", OneHotEncoder(sparse_output = False, handle_unknown="ignore")),       # handle_unknown="ignore"
+                ("scaler", StandardScaler()),
+            ]
+        )
+
+        return cat_preprocessor
+    
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys)   
+ 
 
 def loadCleanData():
     try:
@@ -34,12 +89,13 @@ def encodeCategoricalData(df, categorical_columns):
         logging.info("encoding categorical data")
         
         for column in categorical_columns:
-            label_encoder = LabelEncoder()
-            if column == 'treatment':
-                df[column] = df[column].replace({'No': 0, 'Yes': 1})
+            encoder = OneHotEncoder(sparse_output = False, handle_unknown="ignore")
+            y_encoder = LabelEncoder()
+            if column == y_column:
+                df[column] = y_encoder.fit_transform(df[column])
 
             else:
-                df[column] = label_encoder.fit_transform(df[column])
+                df[column] = encoder.fit_transform(df[column])
 
         return df
     except Exception as e:
@@ -70,7 +126,8 @@ def splitTestTrain(X_scaled, y):
         train_data_dir.mkdir(exist_ok=True)
         test_data_dir.mkdir(exist_ok=True)
 
-        np.save(train_data_dir / "X_train.npy", X_train) # is numpy array because of scaling
+        #sparse.save_npz(train_data_dir / "X_train.npz", X_train) # is sparse matrix because of preprocessing (if not specified in onehot encoder)
+        np.save(train_data_dir / "X_train.npy", X_train)
         y_train.to_csv(train_data_dir / "y_train.csv", index = False)
 
         np.save(test_data_dir / "X_test.npy", X_test)
@@ -104,14 +161,38 @@ if __name__ == "__main__":
     logging.info("starting data preparation for ml training:")
 
     df = loadCleanData()
-    categorical_columns = df.select_dtypes(include="object").columns
-    df = encodeCategoricalData(df, categorical_columns)
 
     X = df.drop(y_column, axis=1)
     y = df[y_column]                # 'treatment'
 
+    categorical_columns = X.select_dtypes(include="object").columns
+
+    #X = encodeCategoricalData(X, categorical_columns)
+
+    preprocessor = definePipeline(X.columns, categorical_columns)
+    label_encoder = LabelEncoder()
+    y = pd.DataFrame(label_encoder.fit_transform(y), columns=[y_column])
+
+    X_scaled = preprocessor.fit_transform(X)
+
     saveFeatureInfo(X.columns, categorical_columns)   # dynamically updates the features used in training so the info can be accessed for the model
 
-    X_scaled = scaleData(X)
+    #X_scaled = scaleData(X)
+
+    print(type(X_scaled))
 
     splitTestTrain(X_scaled, y) #and save data
+
+    
+    try:
+        folder = Path("models")
+        filepath = folder / 'preprocessor.pkl'
+        folder.mkdir(exist_ok=True)
+        logging.info(f"saving preprocessor to path: {filepath}")
+        pickle.dump(preprocessor, open(str(filepath), 'wb'))
+        
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys)  
+    
+

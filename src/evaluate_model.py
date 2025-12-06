@@ -1,20 +1,21 @@
 import pickle
-import numpy as np
 import pandas as pd
 from logger.logger import logging
 from exception.exception import customexception
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay, f1_score
+from sklearn.pipeline import Pipeline
 import sys
 from pathlib import Path
 from matplotlib import pyplot as plt
-from skl2onnx import convert_sklearn, update_registered_converter
-from skl2onnx.common.data_types import FloatTensorType
+from skl2onnx import convert_sklearn
+from skl2onnx.common.data_types import FloatTensorType, StringTensorType
 
 from ruamel.yaml import YAML
 from box import ConfigBox
 from pathlib import Path
 import shap
-import csv
+import numpy as np
+# from scipy import sparse
 
 yaml = YAML(typ="safe")
 
@@ -24,6 +25,10 @@ expl_plot_bool = params.evaluate.expl_plot
 y_column = params.data.y_column
 num_features = params.data.num_features
 features_used = params.data.features_used
+categorical_features = list(params.data.categorical_columns)
+num_categorical_features = len(categorical_features)
+numerical_features = []
+num_numerical_features = num_features - num_categorical_features
 
 
 eval_results_dir = Path("results") / "evaluate"
@@ -42,8 +47,8 @@ def loadTestData():
 def evaluateModel(y_test, pred):
     logging.info("Results: accuracy = " + str(accuracy_score(y_test, pred)) + ", f1 = " + str(f1_score(y_test, pred)))
     try:
-        #print("Accuracy:", accuracy_score(y_test, pred))
-        #print(classification_report(y_test, pred))
+        # print("Accuracy:", accuracy_score(y_test, pred))
+        # print(classification_report(y_test, pred))
 
         report = classification_report(y_test, pred, output_dict=True)
         df_report = pd.DataFrame(report).transpose()
@@ -74,17 +79,24 @@ def createConfusionMatrix(y_test, pred):
         logging.error(e)
         raise customexception(e,sys) 
 
-def modelExplanation(ada_model, X_test):
+def modelExplanation(boost_model, X_test):
 
     logging.info("creating model explanation")
     try:
         eval_results_dir.mkdir(exist_ok=True)
 
-        explainer = shap.TreeExplainer(ada_model)
-        shap_values = explainer.shap_values(X_test)
+        explainer = shap.TreeExplainer(boost_model, X_test[:1000])
+        # shap_values = explainer.shap_values(X_test[:500])
+        shap_values = explainer(X_test[:1000])
+
+        # print(shap_values.shape)
+        # print(X_test.shape)
 
         # Plot feature importance using SHAP values
-        shap.summary_plot(shap_values, X_test, feature_names=features_used, show=False)
+        # shap.summary_plot(shap_values, X_test, feature_names=features_used, show=False)
+        # shap.summary_plot(shap_values, feature_names=features_used, plot_type = 'bar', show=False)
+
+        shap.plots.beeswarm(shap_values, show=False)
 
         logging.info("saving model explanation to " + str(eval_results_dir))
         plt.savefig(str(eval_results_dir) + "/" + "model_explanation.png")
@@ -108,6 +120,9 @@ if __name__ == "__main__":
 
     pred = loaded_model.predict(X_test)
 
+    # print("Accuracy:", accuracy_score(y_test, pred))
+    # print(classification_report(y_test, pred))
+
     evaluateModel(y_test, pred)
 
     if conf_matrix_bool:
@@ -117,10 +132,36 @@ if __name__ == "__main__":
         modelExplanation(loaded_model, X_test)
 
     try:
+        preprocessor = pickle.load(open("models/preprocessor.pkl", "rb"))
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys)   
+    
+    model_pipeline = Pipeline(steps=[
+        ("preprocessor" , preprocessor),
+        ("classifier", loaded_model)
+    ])
+
+
+    try:
     # Convert into ONNX format.
-        num_features = num_features
-        initial_type = [("feature_input", FloatTensorType([None, num_features]))]
-        onx = convert_sklearn(loaded_model, initial_types = initial_type)
+        # only model without pipeline
+        # initial_type = [("feature_input", FloatTensorType([None, num_features]))]
+        # onx = convert_sklearn(loaded_model, initial_types = initial_type)
+
+        # initial_types = []
+        # for col in categorical_features:
+        #     i_type = (col, StringTensorType([None, 1]))
+        #     initial_types.append(i_type)
+
+
+        if num_numerical_features == 0:
+            initial_type = [('string_feature_input', StringTensorType([None, num_categorical_features]))]     # 'string_feature_input'
+        else:
+            initial_type = [('number_feature_input', FloatTensorType([None, num_numerical_features])),
+                ('strfeat', StringTensorType([None, num_categorical_features]))]
+        
+        onx = convert_sklearn(model_pipeline, initial_types = initial_type)
 
         with open("models/model.onnx", "wb") as f:
             f.write(onx.SerializeToString())

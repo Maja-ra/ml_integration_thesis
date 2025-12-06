@@ -14,6 +14,21 @@ stages:
     params:
       params.yaml:
         data:
+          categorical_columns:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
           cols_to_drop:
           - mental_health_interview
           - Timestamp
@@ -48,8 +63,8 @@ stages:
       size: 19872675
     - path: src/prepare_data.py
       hash: md5
-      md5: 27d37d8d3e604f20b548d1f1d90309c3
-      size: 3925
+      md5: 3d9f4fc3dbf00c91370364c3640ff598
+      size: 6626
     params:
       params.yaml:
         base:
@@ -61,7 +76,6 @@ stages:
           - Occupation
           - self_employed
           - family_history
-          - treatment
           - Days_Indoors
           - Growing_Stress
           - Changes_Habits
@@ -96,35 +110,39 @@ stages:
     outs:
     - path: data/test_data/X_test.npy
       hash: md5
-      md5: e6b13c27943d9b720074fb4de12a1f22
-      size: 7668432
+      md5: 754fd076211e6c8125583d2eb207db3f
+      size: 40532592
     - path: data/test_data/y_test.csv
       hash: md5
       md5: c0d740e52df67c9410a9d9460e5c0959
       size: 205412
     - path: data/train_data/X_train.npy
       hash: md5
-      md5: 4e8e3be89917df4bffd2e23356912e66
-      size: 17892576
+      md5: ea76c8b42043937e7accac8449f7f852
+      size: 94574496
     - path: data/train_data/y_train.csv
       hash: md5
       md5: 62b5d6f11a35608d6ac6a92c2f64eb75
       size: 479273
+    - path: models/preprocessor.pkl
+      hash: md5
+      md5: 8bf5df8c99a4f9e869ab630b8a928e0f
+      size: 4185
   train:
     cmd: python src/train_model.py
     deps:
     - path: data/train_data/X_train.npy
       hash: md5
-      md5: 4e8e3be89917df4bffd2e23356912e66
-      size: 17892576
+      md5: ea76c8b42043937e7accac8449f7f852
+      size: 94574496
     - path: data/train_data/y_train.csv
       hash: md5
       md5: 62b5d6f11a35608d6ac6a92c2f64eb75
       size: 479273
     - path: src/train_model.py
       hash: md5
-      md5: 783451654303995bf801d1b61c271ac9
-      size: 2052
+      md5: d851bd3e56eb952ac3953dc803e0b244
+      size: 2080
     params:
       params.yaml:
         base:
@@ -136,7 +154,6 @@ stages:
           - Occupation
           - self_employed
           - family_history
-          - treatment
           - Days_Indoors
           - Growing_Stress
           - Changes_Habits
@@ -173,27 +190,31 @@ stages:
     outs:
     - path: models/model.pkl
       hash: md5
-      md5: dce3675ca608ca290da4129a82d088ed
-      size: 379930
+      md5: 43243b06c91d759c5eb71f6fc8dc86c8
+      size: 208261
   evaluate:
     cmd: python src/evaluate_model.py
     deps:
     - path: data/test_data/X_test.npy
       hash: md5
-      md5: e6b13c27943d9b720074fb4de12a1f22
-      size: 7668432
+      md5: 754fd076211e6c8125583d2eb207db3f
+      size: 40532592
     - path: data/test_data/y_test.csv
       hash: md5
       md5: c0d740e52df67c9410a9d9460e5c0959
       size: 205412
     - path: models/model.pkl
       hash: md5
-      md5: dce3675ca608ca290da4129a82d088ed
-      size: 379930
+      md5: 43243b06c91d759c5eb71f6fc8dc86c8
+      size: 208261
+    - path: models/preprocessor.pkl
+      hash: md5
+      md5: 8bf5df8c99a4f9e869ab630b8a928e0f
+      size: 4185
     - path: src/evaluate_model.py
       hash: md5
-      md5: 601ba9588a6c699a82f32821f60fbb1d
-      size: 4231
+      md5: c2d78c41b0c8abebf38225769636154f
+      size: 5867
     params:
       params.yaml:
         data:
@@ -203,7 +224,6 @@ stages:
           - Occupation
           - self_employed
           - family_history
-          - treatment
           - Days_Indoors
           - Growing_Stress
           - Changes_Habits
@@ -239,10 +259,10 @@ stages:
     outs:
     - path: models/model.onnx
       hash: md5
-      md5: bebe8ccf3c690f64e1a6d03c2ebe89ed
-      size: 198634
+      md5: f7d50c18531866ca47cc4056550cfa51
+      size: 111400
     - path: results/evaluate
       hash: md5
-      md5: 23fbfabe9ee5ce322a3af3c2a8ab5cf6.dir
-      size: 94617
+      md5: ccd2452ce7935dea427dbe7ab6501f97.dir
+      size: 69544
       nfiles: 3

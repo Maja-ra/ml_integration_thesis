@@ -22,6 +22,7 @@ stages:
       - data/train_data/X_train.npy
       - data/test_data/y_test.csv
       - data/train_data/y_train.csv
+      - models/preprocessor.pkl
   train:
     cmd: python src/train_model.py
     deps:
@@ -42,6 +43,7 @@ stages:
     - data/test_data/y_test.csv
     - models/model.pkl
     - src/evaluate_model.py
+    - models/preprocessor.pkl
     params:
     - evaluate
     - data

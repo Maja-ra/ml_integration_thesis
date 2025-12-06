@@ -27,7 +27,7 @@ num_features = params.data.num_features
 features_used = params.data.features_used
 categorical_features = list(params.data.categorical_columns)
 num_categorical_features = len(categorical_features)
-numerical_features = []
+numerical_features = [col for col in features_used if col not in categorical_features]
 num_numerical_features = num_features - num_categorical_features
 
 

@@ -213,8 +213,8 @@ stages:
       size: 4185
     - path: src/evaluate_model.py
       hash: md5
-      md5: c2d78c41b0c8abebf38225769636154f
-      size: 5867
+      md5: d580ddb31a761ff44667ba62eb48c01c
+      size: 5930
     params:
       params.yaml:
         data:
@@ -259,10 +259,10 @@ stages:
     outs:
     - path: models/model.onnx
       hash: md5
-      md5: f7d50c18531866ca47cc4056550cfa51
+      md5: d930a7cd7b00d6c9da64b9f1993bc929
       size: 111400
     - path: results/evaluate
       hash: md5
-      md5: ccd2452ce7935dea427dbe7ab6501f97.dir
-      size: 69544
+      md5: fe770e9c109f7d6084fc5071f8672c9e.dir
+      size: 69964
       nfiles: 3

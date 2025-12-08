@@ -1,6 +1,6 @@
 *__pycache__
 .databricks
-databricks.yaml
+databricks.yml
 .dvc
 dvc.lock
 dvc.yaml
@@ -18,3 +18,16 @@ environments
 *.git
 *.gitignore
 .dvcignore
+*.pyc
+*.pyo
+*.pyd
+requirements.txt
+**api_local.py
+
+results
+img
+data
+**/train_model.py
+**/prepare_data.py
+**/evaluate_model.py
+**/clean_data.py

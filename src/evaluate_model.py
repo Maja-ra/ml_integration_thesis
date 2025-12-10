@@ -12,9 +12,13 @@ from skl2onnx.common.data_types import FloatTensorType, StringTensorType
 
 from ruamel.yaml import YAML
 from box import ConfigBox
-from pathlib import Path
 import shap
 import numpy as np
+from evidently import Dataset
+from evidently import DataDefinition
+from evidently import BinaryClassification
+from evidently.presets import ClassificationPreset
+from evidently import Report
 # from scipy import sparse
 
 yaml = YAML(typ="safe")
@@ -23,6 +27,7 @@ params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
 conf_matrix_bool = params.evaluate.conf_matrix
 expl_plot_bool = params.evaluate.expl_plot
 y_column = params.data.y_column
+pred_column = params.data.pred_column
 num_features = params.data.num_features
 features_used = params.data.features_used
 categorical_features = list(params.data.categorical_columns)
@@ -31,48 +36,87 @@ numerical_features = [col for col in features_used if col not in categorical_fea
 num_numerical_features = num_features - num_categorical_features
 
 
-eval_results_dir = Path("results") / "evaluate"
+RESULTS_DIR = Path(params.base.results_dir)
+RESULTS_DIR.mkdir(exist_ok=True)
+
+DATA_DIR = Path(params.base.data_dir)
+MODELS_DIR = Path(params.base.models_dir)
+REF_DATA_DIR = Path(params.data.ref_data_dir)
+
+model_file = MODELS_DIR / Path(params.train.model_pkl)
+preprocessor_file = MODELS_DIR / Path(params.data.preprocessor)
+ref_data_path = DATA_DIR / Path(params.data.ref_data)
+model_performance_report_path = RESULTS_DIR / "model_performance.json"
+
+train_unscaled = DATA_DIR / Path(params.data.train_unscaled)
+test_unscaled = DATA_DIR / Path(params.data.test_unscaled)
+X_test_path = DATA_DIR / Path(params.data.X_test)
+y_test_path = DATA_DIR / Path(params.data.y_test)
+X_train_path = DATA_DIR / Path(params.data.X_train)
+y_train_path = DATA_DIR / Path(params.data.y_train)
+ref_data_path = DATA_DIR / Path(params.data.ref_data)
+
 
 
 def loadTestData():
     try:
-        X_test = np.load('./data/test_data/X_test.npy')
-        y_test = pd.read_csv('./data/test_data/y_test.csv')
+        X_test = np.load(X_test_path)
+        y_test = pd.read_csv(y_test_path)
 
         return  X_test,  y_test
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys) 
 
-def evaluateModel(y_test, pred):
-    logging.info("Results: accuracy = " + str(accuracy_score(y_test, pred)) + ", f1 = " + str(f1_score(y_test, pred)))
+def loadTrainData():
     try:
-        # print("Accuracy:", accuracy_score(y_test, pred))
-        # print(classification_report(y_test, pred))
+        X_train = np.load('./data/train_data/X_train.npy')
+        y_train = pd.read_csv('./data/train_data/y_train.csv')
 
-        report = classification_report(y_test, pred, output_dict=True)
-        df_report = pd.DataFrame(report).transpose()
+        return  X_train,  y_train
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys) 
+    
+def loadUnscaledData():
+    try:
+        train_unscaled = pd.read_csv('./data/train_data/train_unscaled.csv')
+        test_unscaled = pd.read_csv('./data/test_data/test_unscaled.csv')
 
-        eval_results_dir.mkdir(exist_ok=True)
-        logging.info("saving result metrics to " + str(eval_results_dir))
-        df_report.to_csv(str(eval_results_dir) + "/" + 'evaluation_metrics.csv', index = False)
+        return  test_unscaled,  train_unscaled
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys) 
 
-def createConfusionMatrix(y_test, pred):
+def evaluateModel(y_test,pred_test):
+    logging.info("Results: accuracy = " + str(accuracy_score(y_test,pred_test)) + ", f1 = " + str(f1_score(y_test,pred_test)))
+    try:
+        # print("Accuracy:", accuracy_score(y_test,pred_test))
+        # print(classification_report(y_test,pred_test))
+
+        report = classification_report(y_test,pred_test, output_dict=True)
+        df_report = pd.DataFrame(report).transpose()
+
+        # RESULTS_DIR.mkdir(exist_ok=True)
+        logging.info("saving result metrics to " + str(RESULTS_DIR))
+        df_report.to_csv(str(RESULTS_DIR) + "/" + 'evaluation_metrics.csv', index = False)
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys) 
+
+def createConfusionMatrix(y_test,pred_test):
     logging.info("creating confusion matrix")
     try:
-        eval_results_dir.mkdir(exist_ok=True)
+        RESULTS_DIR.mkdir(exist_ok=True)
 
-        conf_matrix = confusion_matrix(y_test, pred)
+        conf_matrix = confusion_matrix(y_test,pred_test)
 
         cm_display = ConfusionMatrixDisplay(confusion_matrix = conf_matrix, display_labels = [0, 1])
 
         cm_display.plot()
 
-        logging.info("saving confusion matrix to " + str(eval_results_dir))
-        plt.savefig(str(eval_results_dir) + "/" + "confusion_matrix.png")
+        logging.info("saving confusion matrix to " + str(RESULTS_DIR))
+        plt.savefig(str(RESULTS_DIR) + "/" + "confusion_matrix.png")
         plt.close()
 
     except Exception as e:
@@ -83,7 +127,7 @@ def modelExplanation(boost_model, X_test):
 
     logging.info("creating model explanation")
     try:
-        eval_results_dir.mkdir(exist_ok=True)
+        RESULTS_DIR.mkdir(exist_ok=True)
 
         explainer = shap.TreeExplainer(boost_model, X_test[:1000])
         # shap_values = explainer.shap_values(X_test[:500])
@@ -98,41 +142,126 @@ def modelExplanation(boost_model, X_test):
 
         shap.plots.beeswarm(shap_values, show=False)
 
-        logging.info("saving model explanation to " + str(eval_results_dir))
-        plt.savefig(str(eval_results_dir) + "/" + "model_explanation.png")
+        logging.info("saving model explanation to " + str(RESULTS_DIR))
+        plt.savefig(str(RESULTS_DIR) + "/" + "model_explanation.png")
         plt.close()
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys) 
+    
+def createDataframes(X_test, y_test, pred_test, X_train, y_train, pred_train):  # from np array -> not needed when using categorical, unscaled df
+    try:
+        # logging.info("Prepare datasets for monitoring")
+        test_dataframe = pd.Dataframe(X_test, columns=features_used)
+        test_dataframe[y_column] = y_test
+        test_dataframe[pred_column] = pred_test
+
+        train_dataframe = pd.Dataframe(X_train, columns=features_used)
+        train_dataframe[y_column] = y_train
+        train_dataframe[pred_column] = pred_train
+
+        reference_dataframe = train_dataframe.sample(frac=0.3)
+
+        return test_dataframe, train_dataframe, reference_dataframe
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys) 
+
+# def prepareEvidentlyDatasets(test_dataframe, train_dataframe, pred_test, pred_train):
+def prepareEvidentlyDatasets(test_dataframe, pred_test):
+    try:
+        logging.info("Prepare datasets for monitoring")
+        test_dataframe[pred_column] = pred_test
+        # train_dataframe[pred_column] = pred_train
+
+        data_definition=DataDefinition(
+            classification=[BinaryClassification(
+            target=y_column,
+            prediction_labels=pred_column)],
+            categorical_columns = categorical_features,
+            numerical_columns = numerical_features
+        )
+        test_dataset = Dataset.from_pandas(
+            test_dataframe,
+            data_definition=data_definition
+        )
+
+        # train_dataset = Dataset.from_pandas(
+        #     train_dataframe,
+        #     data_definition=data_definition
+        # )
+
+        # reference_dataframe = train_dataframe.sample(frac=0.3)
+        # REF_DATA_DIR.mkdir(exist_ok=True)
+        # reference_dataframe.to_csv(ref_data_path, index = False)
+
+        reference_dataframe = pd.read_csv(ref_data_path)
+
+        ref_dataset = Dataset.from_pandas(
+            reference_dataframe,
+            data_definition=data_definition
+        )
+
+        return test_dataset, ref_dataset
+
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys) 
+    
+def createAndSaveModelPerformanceReport(test_dataset,ref_dataset):
+    try:
+        logging.info("Create model performance report")
+        model_performance_report = Report([
+            ClassificationPreset()
+        ],
+        include_tests=True)
+        eval_report = model_performance_report.run(test_dataset, ref_dataset)
+
+        # Save reports in HTML format
+        #model_performance_report.save_html(str(model_performance_report_path))
+        eval_report.save_json(str(model_performance_report_path))
+
+        # print(eval_report.dict())
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys) 
+
+
 
 if __name__ == "__main__":
     # load the model from disk
     logging.info("starting model evaluation:")
 
     try: 
-        filename = 'models/model.pkl'
-        loaded_model = pickle.load(open(filename, 'rb'))
+        loaded_model = pickle.load(open(model_file, 'rb'))
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys)   
     
     X_test,  y_test = loadTestData()
+    # X_train,  y_train = loadTrainData()
+    test_unscaled, train_unscaled = loadUnscaledData()
 
-    pred = loaded_model.predict(X_test)
+    # pred_train = loaded_model.predict(X_train)
+    pred_test = loaded_model.predict(X_test)
 
-    # print("Accuracy:", accuracy_score(y_test, pred))
-    # print(classification_report(y_test, pred))
+    #test_dataset, train_dataset, ref_dataset = prepareEvidentlyDatasets(test_unscaled, train_unscaled, pred_test, pred_train)
+    test_dataset, ref_dataset = prepareEvidentlyDatasets(test_unscaled, pred_test) # for evidentely monitoring
+    createAndSaveModelPerformanceReport(test_dataset, ref_dataset)
 
-    evaluateModel(y_test, pred)
+    # print("Accuracy:", accuracy_score(y_test,pred_test))
+    # print(classification_report(y_test,pred_test))
+
+    evaluateModel(y_test, pred_test)
 
     if conf_matrix_bool:
-        createConfusionMatrix(y_test, pred)
+        createConfusionMatrix(y_test, pred_test)
 
     if expl_plot_bool:
         modelExplanation(loaded_model, X_test)
 
     try:
-        preprocessor = pickle.load(open("models/preprocessor.pkl", "rb"))
+        preprocessor = pickle.load(open(preprocessor_file, "rb"))
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys)   

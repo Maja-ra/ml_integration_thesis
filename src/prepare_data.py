@@ -22,6 +22,20 @@ y_column = params.data.y_column
 random_seed = params.base.random_seed
 test_size = params.data_split.test_size
 
+TRAIN_DATA_DIR = Path(params.data.train_data_dir)
+TEST_DATA_DIR = Path(params.data.test_data_dir)
+DATA_DIR = Path(params.base.data_dir)
+MODELS_DIR = Path(params.base.models_dir)
+preprocessor_path = MODELS_DIR / Path(params.data.preprocessor)
+
+clean_data_path = DATA_DIR / Path(params.data.clean_data)
+test_unscaled_path = DATA_DIR / Path(params.data.test_unscaled)
+train_unscaled_path = DATA_DIR / Path(params.data.train_unscaled)
+X_test_path = DATA_DIR / Path(params.data.X_test)
+y_test_path = DATA_DIR / Path(params.data.y_test)
+X_train_path = DATA_DIR / Path(params.data.X_train)
+y_train_path = DATA_DIR / Path(params.data.y_train)
+
 
 
 def definePipeline(all_columns, categorical_columns):
@@ -77,8 +91,9 @@ def definePipeline(all_columns, categorical_columns):
 def loadCleanData():
     try:
         logging.info("loading clean data")
-        clean_data_dir = Path("data") / "clean_data"
-        df = pd.read_csv(clean_data_dir / 'clean_data.csv')
+        # clean_data_dir = Path("data") / "clean_data"
+        # df = pd.read_csv(clean_data_dir / 'clean_data.csv')
+        df = pd.read_csv(clean_data_path)
         return df
     except Exception as e:
         logging.error(e)
@@ -114,24 +129,29 @@ def scaleData(X):
 
 
 # Split the DataFrame into training and testing sets and save them in data
-def splitTestTrain(X_scaled, y):
+def splitTestTrain(X_scaled, y, X):
     try:
         logging.info("splitting data into train and test sets")
         X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size = test_size, random_state=random_seed)
+        X[y_column] = y
+        train_unscaled, test_unscaled = train_test_split(X, test_size = test_size, random_state=random_seed)
 
-        train_data_dir = Path("data") / "train_data"
-        test_data_dir = Path("data") / "test_data"
+        #train_data_dir = Path("data") / "train_data"
+        #test_data_dir = Path("data") / "test_data"
 
-        logging.info("saving train data to {train_data_dir} and test data to {test_data_dir}")
-        train_data_dir.mkdir(exist_ok=True)
-        test_data_dir.mkdir(exist_ok=True)
+        logging.info("saving train data to {TRAIN_DATA_DIR} and test data to {TEST_DATA_DIR}")
+
+        TEST_DATA_DIR.mkdir(exist_ok=True)
+        TRAIN_DATA_DIR.mkdir(exist_ok=True)
 
         #sparse.save_npz(train_data_dir / "X_train.npz", X_train) # is sparse matrix because of preprocessing (if not specified in onehot encoder)
-        np.save(train_data_dir / "X_train.npy", X_train)
-        y_train.to_csv(train_data_dir / "y_train.csv", index = False)
+        np.save(X_train_path, X_train)
+        y_train.to_csv(y_train_path, index = False)
+        train_unscaled.to_csv(train_unscaled_path, index = False)
 
-        np.save(test_data_dir / "X_test.npy", X_test)
-        y_test.to_csv(test_data_dir / "y_test.csv", index = False)
+        np.save(X_test_path, X_test)
+        y_test.to_csv(y_test_path, index = False)
+        test_unscaled.to_csv(test_unscaled_path, index = False)
 
     except Exception as e:
         logging.error(e)
@@ -181,15 +201,14 @@ if __name__ == "__main__":
 
     print(type(X_scaled))
 
-    splitTestTrain(X_scaled, y) #and save data
+    splitTestTrain(X_scaled, y, X) #and save data
 
     
     try:
-        folder = Path("models")
-        filepath = folder / 'preprocessor.pkl'
-        folder.mkdir(exist_ok=True)
-        logging.info(f"saving preprocessor to path: {filepath}")
-        pickle.dump(preprocessor, open(str(filepath), 'wb'))
+
+        MODELS_DIR.mkdir(exist_ok=True)
+        logging.info(f"saving preprocessor to path: {preprocessor_path}")
+        pickle.dump(preprocessor, open(str(preprocessor_path), 'wb'))
         
     except Exception as e:
         logging.error(e)

@@ -22,6 +22,8 @@ stages:
       - data/train_data/X_train.npy
       - data/test_data/y_test.csv
       - data/train_data/y_train.csv
+      - data/test_data/test_unscaled.csv
+      - data/train_data/train_unscaled.csv
       - models/preprocessor.pkl
   train:
     cmd: python src/train_model.py
@@ -47,6 +49,20 @@ stages:
     params:
     - evaluate
     - data
+    - base
     outs:
     - results/evaluate
     - models/model.onnx
+  monitor:
+    cmd: python src/monitor.py
+    deps:
+    - src/monitor.py
+    - data/train_data/train_unscaled.csv
+    - data/ref_data/ref_data.csv
+    params:
+    - monitor
+    - base
+    - data
+    outs:
+    - results/monitor/drift_report.json
+    - results/monitor/summary_report.json

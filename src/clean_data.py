@@ -11,11 +11,17 @@ yaml = YAML(typ="safe")
 params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
 cols_to_drop = params.data.cols_to_drop
 
+DATA_DIR = Path(params.base.data_dir)
+CLEAN_DATA_DIR = Path(params.data.clean_data_dir)
+
+clean_data_path = DATA_DIR / Path(params.data.clean_data)
+raw_data_path = DATA_DIR / Path(params.data.raw_data)
+
 # read the raw data and store as dataframe
 def readData():
     try:
         logging.info("reading data")
-        df = pd.read_csv('./data/m_health_dataset.csv')
+        df = pd.read_csv(raw_data_path)
         return df
     except Exception as e:
         logging.error(e)
@@ -53,10 +59,9 @@ def removeNanRows(df):
 
 def saveCleanData(df):
     try:
-        clean_data_dir = Path("data") / "clean_data"
         logging.info("saving clean data to {clean_data_dir}")
-        clean_data_dir.mkdir(exist_ok=True)
-        df.to_csv(clean_data_dir / "clean_data.csv", index = False)
+        CLEAN_DATA_DIR.mkdir(exist_ok=True)
+        df.to_csv(clean_data_path, index = False)
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys)

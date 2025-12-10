@@ -9,11 +9,13 @@ stages:
       size: 24647848
     - path: src/clean_data.py
       hash: md5
-      md5: 0ca4d9b362afe591fd74fc4af2ebff2d
-      size: 2104
+      md5: 56df5e84d6cb5781fa27564e5ea9ca60
+      size: 2224
     params:
       params.yaml:
         data:
+          X_test: test_data/X_test.npy
+          X_train: train_data/X_train.npy
           categorical_columns:
           - Gender
           - Country
@@ -29,6 +31,8 @@ stages:
           - Work_Interest
           - Social_Weakness
           - care_options
+          clean_data: clean_data/clean_data.csv
+          clean_data_dir: data/clean_data
           cols_to_drop:
           - mental_health_interview
           - Timestamp
@@ -48,7 +52,19 @@ stages:
           - Social_Weakness
           - care_options
           num_features: 14
+          pred: prediction/prediction.csv
+          pred_column: prediction
+          preprocessor: preprocessor.pkl
+          raw_data: m_health_dataset.csv
+          ref_data: ref_data/ref_data.csv
+          ref_data_dir: data/ref_data
+          test_data_dir: data/test_data
+          test_unscaled: test_data/test_unscaled.csv
+          train_data_dir: data/train_data
+          train_unscaled: train_data/train_unscaled.csv
           y_column: treatment
+          y_test: test_data/y_test.csv
+          y_train: train_data/y_train.csv
     outs:
     - path: data/clean_data/clean_data.csv
       hash: md5
@@ -63,13 +79,19 @@ stages:
       size: 19872675
     - path: src/prepare_data.py
       hash: md5
-      md5: 3d9f4fc3dbf00c91370364c3640ff598
-      size: 6626
+      md5: 02f7e808b90f24874a129937e4fadc4e
+      size: 7473
     params:
       params.yaml:
         base:
+          data_dir: data
+          models_dir: models
+          monitor_dir: results/monitor
           random_seed: 42
+          results_dir: results/evaluate
         data:
+          X_test: test_data/X_test.npy
+          X_train: train_data/X_train.npy
           categorical_columns:
           - Gender
           - Country
@@ -85,6 +107,8 @@ stages:
           - Work_Interest
           - Social_Weakness
           - care_options
+          clean_data: clean_data/clean_data.csv
+          clean_data_dir: data/clean_data
           cols_to_drop:
           - mental_health_interview
           - Timestamp
@@ -104,7 +128,19 @@ stages:
           - Social_Weakness
           - care_options
           num_features: 14
+          pred: prediction/prediction.csv
+          pred_column: prediction
+          preprocessor: preprocessor.pkl
+          raw_data: m_health_dataset.csv
+          ref_data: ref_data/ref_data.csv
+          ref_data_dir: data/ref_data
+          test_data_dir: data/test_data
+          test_unscaled: test_data/test_unscaled.csv
+          train_data_dir: data/train_data
+          train_unscaled: train_data/train_unscaled.csv
           y_column: treatment
+          y_test: test_data/y_test.csv
+          y_train: train_data/y_train.csv
         data_split:
           test_size: 0.3
     outs:
@@ -112,6 +148,10 @@ stages:
       hash: md5
       md5: 754fd076211e6c8125583d2eb207db3f
       size: 40532592
+    - path: data/test_data/test_unscaled.csv
+      hash: md5
+      md5: d42a71e36e0c1c10d6cd85efc4d7ec02
+      size: 5857240
     - path: data/test_data/y_test.csv
       hash: md5
       md5: c0d740e52df67c9410a9d9460e5c0959
@@ -120,6 +160,10 @@ stages:
       hash: md5
       md5: ea76c8b42043937e7accac8449f7f852
       size: 94574496
+    - path: data/train_data/train_unscaled.csv
+      hash: md5
+      md5: 2862ac343f038842000b57e14ff21969
+      size: 13672605
     - path: data/train_data/y_train.csv
       hash: md5
       md5: 62b5d6f11a35608d6ac6a92c2f64eb75
@@ -146,8 +190,14 @@ stages:
     params:
       params.yaml:
         base:
+          data_dir: data
+          models_dir: models
+          monitor_dir: results/monitor
           random_seed: 42
+          results_dir: results/evaluate
         data:
+          X_test: test_data/X_test.npy
+          X_train: train_data/X_train.npy
           categorical_columns:
           - Gender
           - Country
@@ -163,6 +213,8 @@ stages:
           - Work_Interest
           - Social_Weakness
           - care_options
+          clean_data: clean_data/clean_data.csv
+          clean_data_dir: data/clean_data
           cols_to_drop:
           - mental_health_interview
           - Timestamp
@@ -182,10 +234,24 @@ stages:
           - Social_Weakness
           - care_options
           num_features: 14
+          pred: prediction/prediction.csv
+          pred_column: prediction
+          preprocessor: preprocessor.pkl
+          raw_data: m_health_dataset.csv
+          ref_data: ref_data/ref_data.csv
+          ref_data_dir: data/ref_data
+          test_data_dir: data/test_data
+          test_unscaled: test_data/test_unscaled.csv
+          train_data_dir: data/train_data
+          train_unscaled: train_data/train_unscaled.csv
           y_column: treatment
+          y_test: test_data/y_test.csv
+          y_train: train_data/y_train.csv
         train:
           learning_rate": 0.1
           max_depth: 9
+          model_onnx: model.onnx
+          model_pkl: model.pkl
           n_estimators: 9
     outs:
     - path: models/model.pkl
@@ -213,11 +279,19 @@ stages:
       size: 4185
     - path: src/evaluate_model.py
       hash: md5
-      md5: d580ddb31a761ff44667ba62eb48c01c
-      size: 5930
+      md5: 88899ba31e3374625b7ed8d7a2a7ea3f
+      size: 10800
     params:
       params.yaml:
+        base:
+          data_dir: data
+          models_dir: models
+          monitor_dir: results/monitor
+          random_seed: 42
+          results_dir: results/evaluate
         data:
+          X_test: test_data/X_test.npy
+          X_train: train_data/X_train.npy
           categorical_columns:
           - Gender
           - Country
@@ -233,6 +307,8 @@ stages:
           - Work_Interest
           - Social_Weakness
           - care_options
+          clean_data: clean_data/clean_data.csv
+          clean_data_dir: data/clean_data
           cols_to_drop:
           - mental_health_interview
           - Timestamp
@@ -252,17 +328,118 @@ stages:
           - Social_Weakness
           - care_options
           num_features: 14
+          pred: prediction/prediction.csv
+          pred_column: prediction
+          preprocessor: preprocessor.pkl
+          raw_data: m_health_dataset.csv
+          ref_data: ref_data/ref_data.csv
+          ref_data_dir: data/ref_data
+          test_data_dir: data/test_data
+          test_unscaled: test_data/test_unscaled.csv
+          train_data_dir: data/train_data
+          train_unscaled: train_data/train_unscaled.csv
           y_column: treatment
+          y_test: test_data/y_test.csv
+          y_train: train_data/y_train.csv
         evaluate:
           conf_matrix: yes
           expl_plot: yes
+          metrics: metrics.json
+          model_performance: model_performance.json
     outs:
     - path: models/model.onnx
       hash: md5
-      md5: d930a7cd7b00d6c9da64b9f1993bc929
+      md5: bb77c5025265162389bf7e403cc8ba46
       size: 111400
     - path: results/evaluate
       hash: md5
-      md5: fe770e9c109f7d6084fc5071f8672c9e.dir
-      size: 69964
-      nfiles: 3
+      md5: 39e04573e849ce6ad82927ebdaf30300.dir
+      size: 79060
+      nfiles: 4
+  monitor:
+    cmd: python src/monitor.py
+    deps:
+    - path: data/ref_data/ref_data.csv
+      hash: md5
+      md5: 97f6e75b20fd4dbd8f72a6daa71b9a89
+      size: 4197716
+    - path: data/train_data/train_unscaled.csv
+      hash: md5
+      md5: 2862ac343f038842000b57e14ff21969
+      size: 13672605
+    - path: src/monitor.py
+      hash: md5
+      md5: c777dee399d40cc62a071e9a70f1a4e8
+      size: 3578
+    params:
+      params.yaml:
+        base:
+          data_dir: data
+          models_dir: models
+          monitor_dir: results/monitor
+          random_seed: 42
+          results_dir: results/evaluate
+        data:
+          X_test: test_data/X_test.npy
+          X_train: train_data/X_train.npy
+          categorical_columns:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          clean_data: clean_data/clean_data.csv
+          clean_data_dir: data/clean_data
+          cols_to_drop:
+          - mental_health_interview
+          - Timestamp
+          features_used:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          num_features: 14
+          pred: prediction/prediction.csv
+          pred_column: prediction
+          preprocessor: preprocessor.pkl
+          raw_data: m_health_dataset.csv
+          ref_data: ref_data/ref_data.csv
+          ref_data_dir: data/ref_data
+          test_data_dir: data/test_data
+          test_unscaled: test_data/test_unscaled.csv
+          train_data_dir: data/train_data
+          train_unscaled: train_data/train_unscaled.csv
+          y_column: treatment
+          y_test: test_data/y_test.csv
+          y_train: train_data/y_train.csv
+        monitor:
+          drift_report: drift_report.json
+          summary_report: summary_report.json
+    outs:
+    - path: results/monitor/drift_report.json
+      hash: md5
+      md5: f3dcee23c14d6af696ca38e8915cdf6f
+      size: 15613
+    - path: results/monitor/summary_report.json
+      hash: md5
+      md5: 00a4aad0d436e749b5201f49d332b42f
+      size: 29556

@@ -10,6 +10,8 @@ from ruamel.yaml import YAML
 from box import ConfigBox
 from pathlib import Path
 import sys
+from evidently_service.connect import connectEvidentlyCloud
+from dvc_service.reference import getDvcVersion 
 
 yaml = YAML(typ="safe")
 
@@ -31,6 +33,11 @@ ref_data_path = DATA_DIR / Path(params.data.ref_data)
 current_data_path = DATA_DIR / Path(params.data.train_unscaled)
 summary_report_path = MONITOR_DIR / Path(params.monitor.summary_report)
 drift_report_path = MONITOR_DIR / Path(params.monitor.drift_report)
+
+ws, evidently_project = connectEvidentlyCloud()
+
+dvc_data_ref = getDvcVersion(str(current_data_path))
+dvc_data_ref_ref = getDvcVersion(str(ref_data_path))
 
 
 def load_data():
@@ -75,12 +82,17 @@ def createSummaryReport(current_dataset):
         summary_report = Report([
         DataSummaryPreset()
         ],
-        include_tests=True)
+        include_tests=True, 
+        tags=["summary", "production"],
+        metadata = {
+            "data_ref": dvc_data_ref,
+        })
 
         summary = summary_report.run(current_dataset, None)
 
         summary.save_json(str(summary_report_path))
-        logging.info(f"Data summary report saved to: {summary_report_path}")
+        ws.add_run(evidently_project.id, summary, include_data=False)
+        logging.info(f"Data summary report saved to: {summary_report_path}. Cloud - Evidently project id: {evidently_project.id}")
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys) 
@@ -93,12 +105,18 @@ def createDriftReport(current_dataset, ref_dataset):
         drift_report = Report([
         DataDriftPreset()
         ],
-        include_tests=True)
+        include_tests=True,
+        tags=["drift", "production"],
+        metadata = {
+            "data_ref": dvc_data_ref,
+            "data_ref_ref": dvc_data_ref_ref,
+        })
 
         drift_eval = drift_report.run(current_data=current_dataset, reference_data=ref_dataset)
 
         drift_eval.save_json(str(drift_report_path))
-        logging.info(f"Data drift report saved to: {drift_report_path}")
+        ws.add_run(evidently_project.id, drift_eval, include_data=False)
+        logging.info(f"Data drift report saved to: {drift_report_path}. Cloud - Evidently project id: {evidently_project.id}")
     except Exception as e:
         logging.error(e)
         raise customexception(e,sys) 

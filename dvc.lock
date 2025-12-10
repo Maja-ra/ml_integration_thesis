@@ -279,8 +279,8 @@ stages:
       size: 4185
     - path: src/evaluate_model.py
       hash: md5
-      md5: 88899ba31e3374625b7ed8d7a2a7ea3f
-      size: 10800
+      md5: ed9353e7ddaae70d3d8647f222053518
+      size: 11386
     params:
       params.yaml:
         base:
@@ -349,12 +349,12 @@ stages:
     outs:
     - path: models/model.onnx
       hash: md5
-      md5: bb77c5025265162389bf7e403cc8ba46
+      md5: 0e7320f752bda14498e9524c9ac553c0
       size: 111400
     - path: results/evaluate
       hash: md5
-      md5: 39e04573e849ce6ad82927ebdaf30300.dir
-      size: 79060
+      md5: a6d329d5cd88aee4cb5378f88762789d.dir
+      size: 78848
       nfiles: 4
   monitor:
     cmd: python src/monitor.py
@@ -369,8 +369,8 @@ stages:
       size: 13672605
     - path: src/monitor.py
       hash: md5
-      md5: c777dee399d40cc62a071e9a70f1a4e8
-      size: 3578
+      md5: 5f50c654c9c6271c4cafa7156d753e72
+      size: 4377
     params:
       params.yaml:
         base:
@@ -437,9 +437,9 @@ stages:
     outs:
     - path: results/monitor/drift_report.json
       hash: md5
-      md5: f3dcee23c14d6af696ca38e8915cdf6f
-      size: 15613
+      md5: 348df6b16c03045462689b6163e30292
+      size: 15614
     - path: results/monitor/summary_report.json
       hash: md5
-      md5: 00a4aad0d436e749b5201f49d332b42f
+      md5: 81640e5831873e3c741d250fbf0e8429
       size: 29556

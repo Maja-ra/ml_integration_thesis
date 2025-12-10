@@ -19,6 +19,8 @@ from evidently import DataDefinition
 from evidently import BinaryClassification
 from evidently.presets import ClassificationPreset
 from evidently import Report
+from evidently_service.connect import connectEvidentlyCloud
+from dvc_service.reference import getDvcVersion
 # from scipy import sparse
 
 yaml = YAML(typ="safe")
@@ -55,6 +57,12 @@ y_test_path = DATA_DIR / Path(params.data.y_test)
 X_train_path = DATA_DIR / Path(params.data.X_train)
 y_train_path = DATA_DIR / Path(params.data.y_train)
 ref_data_path = DATA_DIR / Path(params.data.ref_data)
+clean_data_path = DATA_DIR / Path(params.data.clean_data)
+
+ws, evidently_project = connectEvidentlyCloud()
+
+dvc_model_ref = getDvcVersion(str(model_file))
+dvc_data_ref = getDvcVersion(str(clean_data_path))
 
 
 
@@ -214,12 +222,18 @@ def createAndSaveModelPerformanceReport(test_dataset,ref_dataset):
         model_performance_report = Report([
             ClassificationPreset()
         ],
-        include_tests=True)
+        include_tests=True,
+        tags=["classification", "production"],
+        metadata = {
+            "model_ref": dvc_model_ref,
+            "data_ref": dvc_data_ref,
+        })
         eval_report = model_performance_report.run(test_dataset, ref_dataset)
 
         # Save reports in HTML format
         #model_performance_report.save_html(str(model_performance_report_path))
         eval_report.save_json(str(model_performance_report_path))
+        ws.add_run(evidently_project.id, eval_report, include_data=False)   # upload report to cloud
 
         # print(eval_report.dict())
     except Exception as e:

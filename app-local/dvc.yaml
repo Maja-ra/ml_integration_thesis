@@ -5,6 +5,7 @@ stages:
     deps:
     - api_local.py
     - ../models/model.onnx
+    - ../deploy_check.py
     params:
     - ../params.yaml:
       - base

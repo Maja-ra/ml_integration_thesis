@@ -250,7 +250,6 @@ stages:
         train:
           learning_rate": 0.1
           max_depth: 9
-          model_onnx: model.onnx
           model_pkl: model.pkl
           n_estimators: 9
     outs:
@@ -346,15 +345,16 @@ stages:
           expl_plot: yes
           metrics: metrics.json
           model_performance: model_performance.json
+          model_onnx: model.onnx
     outs:
     - path: models/model.onnx
       hash: md5
-      md5: 0e7320f752bda14498e9524c9ac553c0
+      md5: ab600a4792f15bb51b3adae064e46458
       size: 111400
     - path: results/evaluate
       hash: md5
-      md5: a6d329d5cd88aee4cb5378f88762789d.dir
-      size: 78848
+      md5: c0fcccbe07cdc864f588800232631631.dir
+      size: 78988
       nfiles: 4
   monitor:
     cmd: python src/monitor.py
@@ -443,3 +443,80 @@ stages:
       hash: md5
       md5: 81640e5831873e3c741d250fbf0e8429
       size: 29556
+  deploy:
+    cmd: fastapi dev app/api_local.py
+    deps:
+    - path: app/api_local.py
+      hash: md5
+      md5: 436059305fcefb14c2083f187937ebc5
+      size: 6701
+    - path: models/model.onnx
+      hash: md5
+      md5: ab600a4792f15bb51b3adae064e46458
+      size: 111400
+    params:
+      params.yaml:
+        base:
+          data_dir: data
+          models_dir: models
+          monitor_dir: results/monitor
+          random_seed: 42
+          results_dir: results/evaluate
+        data:
+          X_test: test_data/X_test.npy
+          X_train: train_data/X_train.npy
+          categorical_columns:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          clean_data: clean_data/clean_data.csv
+          clean_data_dir: data/clean_data
+          cols_to_drop:
+          - mental_health_interview
+          - Timestamp
+          features_used:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          num_features: 14
+          pred: prediction/prediction.csv
+          pred_column: prediction
+          preprocessor: preprocessor.pkl
+          raw_data: m_health_dataset.csv
+          ref_data: ref_data/ref_data.csv
+          ref_data_dir: data/ref_data
+          test_data_dir: data/test_data
+          test_unscaled: test_data/test_unscaled.csv
+          train_data_dir: data/train_data
+          train_unscaled: train_data/train_unscaled.csv
+          y_column: treatment
+          y_test: test_data/y_test.csv
+          y_train: train_data/y_train.csv
+        evaluate:
+          conf_matrix: yes
+          expl_plot: yes
+          metrics: metrics.json
+          model_performance: model_performance.json
+          model_onnx: model.onnx

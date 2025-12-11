@@ -27,7 +27,11 @@ data:
   y_test: test_data/y_test.csv
   y_train: train_data/y_train.csv
 data_split: {test_size: 0.3}
-evaluate: {conf_matrix: yes, expl_plot: yes, metrics: metrics.json, model_performance: model_performance.json}
+evaluate: {conf_matrix: yes, expl_plot: yes, metrics: metrics.json, model_performance: model_performance.json, model_onnx: model.onnx}
 monitor: {drift_report: drift_report.json, summary_report: summary_report.json}
-train: {learning_rate": 0.1, max_depth: 9, model_onnx: model.onnx, model_pkl: model.pkl,
+train: {learning_rate": 0.1, max_depth: 9, model_pkl: model.pkl,
   n_estimators: 9}
+environment:
+  env: local
+  model_baseline: 0.7
+  drift_threshhold: 0.1

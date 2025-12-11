@@ -1,0 +1,12 @@
+stages:  
+  deploy-local:
+    cmd: 
+    - fastapi dev api_local.py
+    deps:
+    - api_local.py
+    - ../models/model.onnx
+    params:
+    - ../params.yaml:
+      - base
+      - data
+      - evaluate

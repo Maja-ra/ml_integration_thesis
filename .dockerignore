@@ -1,7 +1,8 @@
 *__pycache__
 .databricks
 databricks.yml
-.dvc
+# außer dvc config
+.dvc 
 dvc.lock
 dvc.yaml
 .vscode
@@ -11,23 +12,28 @@ experiments
 img
 logs
 thesis_venv
-environments
+#environments
 *.md
 .cache
 *.log
 *.git
 *.gitignore
-.dvcignore
+*.dvcignore
 *.pyc
 *.pyo
 *.pyd
 requirements.txt
-**api_local.py
+app-local
+**/api_local.py
 
 results
 img
 data
+**/evidently_service
 **/train_model.py
 **/prepare_data.py
 **/evaluate_model.py
 **/clean_data.py
+**/monitor.py
+**/model.pkl
+**/preprocessor.pkl

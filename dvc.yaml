@@ -66,3 +66,15 @@ stages:
     outs:
     - results/evaluate
     - models/model.onnx
+  deploy-check:
+    cmd: python deploy_check.py
+    deps:
+    - results/monitor/drift_report.json
+    - results/evaluate/model_performance.json
+    - deploy_check.py
+    params:
+    - base
+    - evaluate
+    - monitor
+    - environment
+

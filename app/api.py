@@ -9,6 +9,18 @@ import sys
 import pandas as pd
 from ..src.logger.logger import logging                 # ohne docker ohne punkt
 from ..src.exception.exception import customexception
+from tracely import init_tracing
+from tracely import trace_event
+from tracely import create_trace_event
+from dotenv import load_dotenv
+import os
+
+load_dotenv("./environments/prod.env")
+
+EVIDENTLY_API_KEY = os.getenv("EVIDENTLY_API_KEY")
+EVIDENTLY_PROJECT_ID = os.getenv("EVIDENTLY_PROJECT_ID")
+EVIDENTLY_URL = os.getenv("EVIDENTLY_URL")
+TRACING_EXPORT_NAME = os.getenv("TRACING_EXPORT_NAME")
 
 yaml = YAML(typ="safe")
 
@@ -21,6 +33,7 @@ categorical_features = list(params["data"]["categorical_columns"])
 num_categorical_features = len(categorical_features)
 numerical_features = [col for col in features_used if col not in categorical_features]
 num_numerical_features = num_features - num_categorical_features 
+y_column = params["data"]["y_column"]
 
 model_file = "./models/model.onnx"              # ohne docker:  /models/model.onnx
 
@@ -34,7 +47,7 @@ Gives access to ML-Model prediction for masters thesis. 🚀
 Model type is: 
 """
 
-##############################
+############################## initialize session and tracing
 
 try:
     logging.info("starting API APP and inference session")
@@ -42,6 +55,22 @@ try:
 except Exception as e:
     logging.error(e)
     raise customexception(e,sys)  
+
+ml_sess_id = 1
+
+try:
+# Initialize tracing
+    init_tracing(
+        address= EVIDENTLY_URL,              # Trace Collector Address
+        api_key= EVIDENTLY_API_KEY,                                         # API Key from Evidently Cloud
+        project_id= EVIDENTLY_PROJECT_ID,  # Project ID from Evidently Cloud
+        export_name=TRACING_EXPORT_NAME,
+    )
+except Exception as e:
+    logging.error(e)
+    raise customexception(e,sys)  
+
+#################################
 
 def make_inference(input):
     try:
@@ -131,21 +160,26 @@ async def create_upload_file(input_data: DataModel, request: Request):
     result = make_inference(input_list)
 
     result_dict = {
-        "prediction": result.tolist()           #result is np.ndarray -> to list to make iterable
+        "prediction": result.tolist()[0]           #result is np.ndarray -> to list to make iterable
     }
 
     log_dict = {
-        "prediction": result.tolist(),
+        "prediction": result.tolist()[0],
         "input": input_data_dict       
     }
-    try: # save prediction info
-        print(input_data_dict)
-        log_df = pd.DataFrame(input_data_dict, index=[0])
-        log_df["pred_treatment"] = result.tolist()[0]
-        log_df["id"] = str(input_data._id)
-    except Exception as e:
-        logging.error(e)
-        raise customexception(e,sys)  
+
+    trace_id = str(uuid4())
+
+    with create_trace_event("prediction", session_id=trace_id) as event:
+        for k in input_data_dict:
+            event.set_attribute(k, input_data_dict[k])
+        #event.set_attribute("input", pd.DataFrame(input_data_dict, index=[0]))
+        event.set_attribute("input_data_id", str(input_data._id))
+        event.set_attribute("prediction", result.tolist()[0])
+        event.set_attribute("prediction_label", y_column)
+        # event.set_attribute("prediction", "0")
+        event.set_attribute("ml_session_id", ml_sess_id)
+
 
     logging.info("Prediction: %s", log_dict)
 

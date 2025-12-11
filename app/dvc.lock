@@ -86,7 +86,8 @@ stages:
           model_performance: model_performance.json
           model_onnx: model.onnx
   build-image:
-    cmd: docker build -f ../Dockerfile -t test-app ../
+    cmd: docker build -f ../Dockerfile -t 
+      ghcr.io/maja-ra/ml_integration_thesis:latest ../
     deps:
     - path: ../.dockerignore
       hash: md5
@@ -98,19 +99,36 @@ stages:
       size: 765
     - path: ../deploy_check.py
       hash: md5
-      md5: 0770eb6278945feb8547f3c5b044848a
-      size: 2319
+      md5: 5363ddfb08c5a0e0e64d5855235f9621
+      size: 3026
+    - path: ../models/model.onnx
+      hash: md5
+      md5: ab600a4792f15bb51b3adae064e46458
+      size: 111400
     - path: api.py
       hash: md5
-      md5: bc858b916102cfdb695ed744d61917b6
-      size: 4428
+      md5: 1edd89c2d00f05b4dab8206a927dc624
+      size: 5662
     params:
-      ../params.yaml:
+      params.yaml:
         docker:
           local_image_name: ml-api-app
           image_registry: ghcr.io/maja-ra/ml_integration_thesis
+          container: mlapi-container
   run-container:
-    cmd: docker run --name test-container -d -p 8000:8000 test-app
+    cmd:
+    - docker push ghcr.io/maja-ra/ml_integration_thesis:latest
+    - docker compose up -d
+    params:
+      params.yaml:
+        docker:
+          local_image_name: ml-api-app
+          image_registry: ghcr.io/maja-ra/ml_integration_thesis
+          container: mlapi-container
+  remove-container:
+    cmd:
+    - docker stop test-container
+    - docker rm test-container
     params:
       ../params.yaml:
         docker:

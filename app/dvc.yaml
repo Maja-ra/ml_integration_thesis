@@ -1,26 +1,22 @@
 stages: # for docker production deployment
   build-image:
-    cmd: docker build -f ../Dockerfile -t test-app ../
+    cmd: docker build -f ../Dockerfile -t ${docker.image_registry}:latest ../
     deps:
     - api.py
     - ../Dockerfile
     - ../.dockerignore
     - ../deploy_check.py
+    - ../models/model.onnx
     params:
-    - ../params.yaml:
-      - docker
-  run-container:
-    cmd: docker run --name test-container -d -p 8000:8000 test-app
+    - docker
+  run-container: 
     params:
-    - ../params.yaml:
-      - docker
-  # upload-container:
-  #   cmd: docker push ghcr.io/maja-ra/ml_integration_thesis:latest
-  #   params:
-  #   - ../params.yaml:
-  #     - docker
+    - docker
+    cmd: 
+    - docker push ${docker.image_registry}:latest
+    - docker compose up -d
+    #- docker run --name ${docker.local_container} -d --restart=always -p 8000:8000 ${docker.local_image_name}
+    always_changed: true
   # update-dvc:
   #   cmd: dvc push
-
-
   

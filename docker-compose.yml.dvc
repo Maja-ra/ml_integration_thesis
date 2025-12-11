@@ -1,0 +1,5 @@
+outs:
+- md5: 6f440ae0872471b8cdc311feeac16985
+  size: 160
+  hash: md5
+  path: docker-compose.yml

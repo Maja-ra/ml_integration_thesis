@@ -6,6 +6,7 @@ from pathlib import Path
 from box import ConfigBox
 from ruamel.yaml import YAML
 import json
+import shutil
 
 yaml = YAML(typ="safe")
 
@@ -13,6 +14,12 @@ params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
 ENV = params.environment.env
 RESULTS_DIR = Path(params.base.results_dir)
 MONITOR_DIR = Path(params.base.monitor_dir)
+PROD_MODEL_DIR = Path(params.base.models_dir) / Path(params.environment.prod_model_path)
+
+PROD_MODEL_DIR.mkdir(exist_ok=True)
+
+prod_model_src_path = Path(params.base.models_dir) /params.environment.prod_model
+prod_model_dest_path = PROD_MODEL_DIR /params.environment.prod_model
 
 model_performance = RESULTS_DIR / Path(params.evaluate.model_performance)
 drift_report = MONITOR_DIR / Path(params.monitor.drift_report)
@@ -22,6 +29,7 @@ drift_threshhold = params.environment.drift_threshhold
 
 def passModelBaselineComparison():
     try:
+        logging.info(f"Check model performance. Baseline: {model_baseline}")
         with open(model_performance, 'r') as file:
             perf_data = json.load(file)
 
@@ -29,9 +37,10 @@ def passModelBaselineComparison():
         accuracy = perf_data["metrics"][0]["value"]
 
         if f1 > model_baseline:
-            print(f1)
+            logging.info("assessment passed")
             return True
         else:
+            logging.info(f"assessment failed. Value: {f1}")
             return False    
 
     except Exception as e:
@@ -40,6 +49,7 @@ def passModelBaselineComparison():
 
 def passDriftCheck():
     try:
+        logging.info(f"Checking drift. Threshhold: {drift_threshhold}")
         with open(drift_report, 'r') as file:
             drift_data = json.load(file)
 
@@ -56,10 +66,11 @@ def passDriftCheck():
                 pass
 
         if drifted_cols == []:
-            print(drifted_cols)
+            logging.info("No drift detected")
             return True
         else:
-            print(drifted_cols)
+            drifted_cols_str = str(drifted_cols)
+            logging.info(f"Drift detected in columns {drifted_cols_str}")
             return False
 
     except Exception as e:
@@ -74,11 +85,15 @@ if __name__ == "__main__":
 
     if ENV == "local":
         os.system('dvc repro app-local/dvc.yaml')
+
     if ENV == "production":
+
         if drift_check_bool != True  and perf_check_bool == True:
+            logging.info("Redeploying model due to drift...")
+            
+            shutil.copyfile(prod_model_src_path, prod_model_dest_path)
+
             os.system('dvc repro app/dvc.yaml')
+            #os.system('dvc repro app/dvc.yaml:run-container')
     else:
         pass
-
-    #print(perf_check_bool)
-    #print(drift_check_bool)

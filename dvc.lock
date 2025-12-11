@@ -520,3 +520,39 @@ stages:
           metrics: metrics.json
           model_performance: model_performance.json
           model_onnx: model.onnx
+  deploy-check:
+    cmd: python deploy_check.py
+    deps:
+    - path: deploy_check.py
+      hash: md5
+      md5: 93853ad78ec28690504f17702d4d7e3f
+      size: 2792
+    - path: results/evaluate/model_performance.json
+      hash: md5
+      md5: f1a367a87bc66ad7fb1ae41a95509d29
+      size: 9288
+    - path: results/monitor/drift_report.json
+      hash: md5
+      md5: 348df6b16c03045462689b6163e30292
+      size: 15614
+    params:
+      params.yaml:
+        base:
+          data_dir: data
+          models_dir: models
+          monitor_dir: results/monitor
+          random_seed: 42
+          results_dir: results/evaluate
+        environment:
+          env: production
+          model_baseline: 0.7
+          drift_threshhold: 0.1
+        evaluate:
+          conf_matrix: yes
+          expl_plot: yes
+          metrics: metrics.json
+          model_performance: model_performance.json
+          model_onnx: model.onnx
+        monitor:
+          drift_report: drift_report.json
+          summary_report: summary_report.json

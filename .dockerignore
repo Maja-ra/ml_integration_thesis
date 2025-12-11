@@ -1,17 +1,18 @@
-*__pycache__
-.databricks
+**__pycache__
+__pycache__/
+.databricks/
 databricks.yml
 # außer dvc config
-.dvc 
+.dvc/ 
 dvc.lock
 dvc.yaml
-.vscode
-adrs
-eda
-experiments
-img
-logs
-thesis_venv
+.vscode/
+adrs/
+eda/
+experiments/
+img/
+logs/
+thesis_venv/
 #environments
 *.md
 .cache
@@ -22,13 +23,14 @@ thesis_venv
 *.pyc
 *.pyo
 *.pyd
+*.lock
 requirements.txt
-app-local
+app-local/
 **/api_local.py
+*models/model.pkl
 
-results
-img
-data
+results/
+data/
 **/evidently_service
 **/train_model.py
 **/prepare_data.py
@@ -37,3 +39,7 @@ data
 **/monitor.py
 **/model.pkl
 **/preprocessor.pkl
+**/deploy_check.py
+*/app/dvc.yaml
+*/app/params.yaml
+*/app/params.yaml.dvc

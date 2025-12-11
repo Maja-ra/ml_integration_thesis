@@ -1,0 +1,118 @@
+schema: '2.0'
+stages:
+  build-docker:
+    cmd: docker build -f ../Dockerfile -t test-app ../
+    deps:
+    - path: ../.dockerignore
+      hash: md5
+      md5: b15a9398dbec5251b6aa8558bff7bd18
+      size: 455
+    - path: ../Dockerfile
+      hash: md5
+      md5: 0a5a819acbb12851dea5db3383fa5f66
+      size: 705
+    - path: ../deploy_check.py
+      hash: md5
+      md5: 0770eb6278945feb8547f3c5b044848a
+      size: 2319
+    - path: api.py
+      hash: md5
+      md5: bc858b916102cfdb695ed744d61917b6
+      size: 4428
+    params:
+      ../params.yaml:
+        base:
+          data_dir: data
+          models_dir: models
+          monitor_dir: results/monitor
+          random_seed: 42
+          results_dir: results/evaluate
+        data:
+          X_test: test_data/X_test.npy
+          X_train: train_data/X_train.npy
+          categorical_columns:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          clean_data: clean_data/clean_data.csv
+          clean_data_dir: data/clean_data
+          cols_to_drop:
+          - mental_health_interview
+          - Timestamp
+          features_used:
+          - Gender
+          - Country
+          - Occupation
+          - self_employed
+          - family_history
+          - Days_Indoors
+          - Growing_Stress
+          - Changes_Habits
+          - Mental_Health_History
+          - Mood_Swings
+          - Coping_Struggles
+          - Work_Interest
+          - Social_Weakness
+          - care_options
+          num_features: 14
+          pred: prediction/prediction.csv
+          pred_column: prediction
+          preprocessor: preprocessor.pkl
+          raw_data: m_health_dataset.csv
+          ref_data: ref_data/ref_data.csv
+          ref_data_dir: data/ref_data
+          test_data_dir: data/test_data
+          test_unscaled: test_data/test_unscaled.csv
+          train_data_dir: data/train_data
+          train_unscaled: train_data/train_unscaled.csv
+          y_column: treatment
+          y_test: test_data/y_test.csv
+          y_train: train_data/y_train.csv
+        evaluate:
+          conf_matrix: yes
+          expl_plot: yes
+          metrics: metrics.json
+          model_performance: model_performance.json
+          model_onnx: model.onnx
+  build-image:
+    cmd: docker build -f ../Dockerfile -t test-app ../
+    deps:
+    - path: ../.dockerignore
+      hash: md5
+      md5: b15a9398dbec5251b6aa8558bff7bd18
+      size: 455
+    - path: ../Dockerfile
+      hash: md5
+      md5: 7724a7a3537c5122f3c29022d05ad06d
+      size: 765
+    - path: ../deploy_check.py
+      hash: md5
+      md5: 0770eb6278945feb8547f3c5b044848a
+      size: 2319
+    - path: api.py
+      hash: md5
+      md5: bc858b916102cfdb695ed744d61917b6
+      size: 4428
+    params:
+      ../params.yaml:
+        docker:
+          local_image_name: ml-api-app
+          image_registry: ghcr.io/maja-ra/ml_integration_thesis
+  run-container:
+    cmd: docker run --name test-container -d -p 8000:8000 test-app
+    params:
+      ../params.yaml:
+        docker:
+          local_image_name: ml-api-app
+          image_registry: ghcr.io/maja-ra/ml_integration_thesis

@@ -73,10 +73,12 @@ if __name__ == "__main__":
     drift_check_bool = passDriftCheck()
 
     if ENV == "local":
-        print(ENV)
         os.system('dvc repro app-local/dvc.yaml')
+    if ENV == "production":
+        if drift_check_bool != True  and perf_check_bool == True:
+            os.system('dvc repro app/dvc.yaml')
     else:
         pass
 
-    print(perf_check_bool)
-    print(drift_check_bool)
+    #print(perf_check_bool)
+    #print(drift_check_bool)

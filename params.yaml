@@ -32,6 +32,9 @@ monitor: {drift_report: drift_report.json, summary_report: summary_report.json}
 train: {learning_rate": 0.1, max_depth: 9, model_pkl: model.pkl,
   n_estimators: 9}
 environment:
-  env: local
+  env: production
   model_baseline: 0.7
   drift_threshhold: 0.1
+docker:
+  local_image_name: ml-api-app
+  image_registry: ghcr.io/maja-ra/ml_integration_thesis

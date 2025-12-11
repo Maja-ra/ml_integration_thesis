@@ -1,0 +1,26 @@
+stages: # for docker production deployment
+  build-image:
+    cmd: docker build -f ../Dockerfile -t test-app ../
+    deps:
+    - api.py
+    - ../Dockerfile
+    - ../.dockerignore
+    - ../deploy_check.py
+    params:
+    - ../params.yaml:
+      - docker
+  run-container:
+    cmd: docker run --name test-container -d -p 8000:8000 test-app
+    params:
+    - ../params.yaml:
+      - docker
+  # upload-container:
+  #   cmd: docker push ghcr.io/maja-ra/ml_integration_thesis:latest
+  #   params:
+  #   - ../params.yaml:
+  #     - docker
+  # update-dvc:
+  #   cmd: dvc push
+
+
+  

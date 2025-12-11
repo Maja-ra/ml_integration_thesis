@@ -10,8 +10,8 @@ COPY ./requirements_api.txt /thesis_repos/requirements_api.txt
 # Copy the application code to the working directory 
 COPY . .
 
-# Install the Python dependencies # RUN pip install --upgrade .
-RUN pip install --no-cache-dir --upgrade -r /thesis_repos/requirements_api.txt
+# Install the Python dependencies # RUN pip install --upgrade . pip install --no-cache-dir --upgrade -r /thesis_repos/requirements_api.txt
+RUN pip install --upgrade -r /thesis_repos/requirements_api.txt
 
 EXPOSE 8000
 # Run the FastAPI application using uvicorn server

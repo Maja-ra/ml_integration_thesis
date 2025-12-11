@@ -78,3 +78,5 @@ stages:
           metrics: metrics.json
           model_performance: model_performance.json
           model_onnx: model.onnx
+  update-dvc:
+    cmd: dvc push

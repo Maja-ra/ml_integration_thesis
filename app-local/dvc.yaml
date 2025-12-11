@@ -4,12 +4,15 @@ stages:
     - fastapi dev api_local.py
     deps:
     - api_local.py
-    - ../models/production/model.onnx
+    - ../models/production/model_prod.onnx
     - ../deploy_check.py
     params:
     - ../params.yaml:
       - base
       - data
       - evaluate
-  # update-dvc:
-  #   cmd: dvc push
+  update-dvc:
+    cmd: 
+    - dvc commit
+    - dvc push
+    always_changed: true

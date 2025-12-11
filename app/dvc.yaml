@@ -6,7 +6,7 @@ stages: # for docker production deployment
     - ../Dockerfile
     - ../.dockerignore
     - ../deploy_check.py
-    - ../models/production/model.onnx
+    - ../models/production/model_prod.onnx
     params:
     - docker
   run-container: 
@@ -17,6 +17,9 @@ stages: # for docker production deployment
     - docker compose up -d
     #- docker run --name ${docker.local_container} -d --restart=always -p 8000:8000 ${docker.local_image_name}
     always_changed: true
-  # update-dvc:
-  #   cmd: dvc push
+  update-dvc:
+    cmd: 
+    - dvc commit
+    - dvc push
+    always_changed: true
   

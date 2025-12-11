@@ -91,24 +91,24 @@ stages:
     deps:
     - path: ../.dockerignore
       hash: md5
-      md5: b15a9398dbec5251b6aa8558bff7bd18
-      size: 455
+      md5: a8d66a2a397277c6407d22e7fac93053
+      size: 582
     - path: ../Dockerfile
       hash: md5
       md5: 7724a7a3537c5122f3c29022d05ad06d
       size: 765
     - path: ../deploy_check.py
       hash: md5
-      md5: 5363ddfb08c5a0e0e64d5855235f9621
-      size: 3026
-    - path: ../models/model.onnx
+      md5: e106c5a7111cb4a83873fe62f2324603
+      size: 3496
+    - path: ../models/production/model_prod.onnx
       hash: md5
       md5: ab600a4792f15bb51b3adae064e46458
       size: 111400
     - path: api.py
       hash: md5
-      md5: 1edd89c2d00f05b4dab8206a927dc624
-      size: 5662
+      md5: b3394f973411485356ea11ca99853460
+      size: 5673
     params:
       params.yaml:
         docker:
@@ -134,3 +134,7 @@ stages:
         docker:
           local_image_name: ml-api-app
           image_registry: ghcr.io/maja-ra/ml_integration_thesis
+  update-dvc:
+    cmd:
+    - dvc commit
+    - dvc push

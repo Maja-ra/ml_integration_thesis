@@ -1,5 +1,6 @@
 [core]
     remote = origin
+    autostage = true
 ['remote "myremote"']
     url = C:/Users/Maja/fake_remote
 ['remote "s3"']

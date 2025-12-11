@@ -6,7 +6,7 @@ stages: # for docker production deployment
     - ../Dockerfile
     - ../.dockerignore
     - ../deploy_check.py
-    - ../models/model.onnx
+    - ../models/production/model.onnx
     params:
     - docker
   run-container: 

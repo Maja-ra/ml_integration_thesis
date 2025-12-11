@@ -18,7 +18,7 @@ PROD_MODEL_DIR = Path(params.base.models_dir) / Path(params.environment.prod_mod
 
 PROD_MODEL_DIR.mkdir(exist_ok=True)
 
-prod_model_src_path = Path(params.base.models_dir) /params.environment.prod_model
+prod_model_src_path = Path(params.base.models_dir) /params.environment.model_to_copy
 prod_model_dest_path = PROD_MODEL_DIR /params.environment.prod_model
 
 model_performance = RESULTS_DIR / Path(params.evaluate.model_performance)
@@ -83,17 +83,25 @@ if __name__ == "__main__":
     perf_check_bool = passModelBaselineComparison()
     drift_check_bool = passDriftCheck()
 
-    if ENV == "local":
-        os.system('dvc repro app-local/dvc.yaml')
+    new_model = drift_check_bool != True  and perf_check_bool == True
 
-    if ENV == "production":
+    if new_model:
+             
+        shutil.copyfile(prod_model_src_path, prod_model_dest_path)
 
-        if drift_check_bool != True  and perf_check_bool == True:
+        if ENV == "production":
             logging.info("Redeploying model due to drift...")
-            
-            shutil.copyfile(prod_model_src_path, prod_model_dest_path)
-
             os.system('dvc repro app/dvc.yaml')
             #os.system('dvc repro app/dvc.yaml:run-container')
+        elif ENV == "local":
+            logging.info("Starting new model...")
+            os.system('dvc repro app-local/dvc.yaml')
     else:
-        pass
+        if ENV == "production":
+            logging.info("Keeping model. No new deployment.")
+
+        elif ENV == "local":
+            logging.info("Keeping production model")
+            os.system('dvc repro app-local/dvc.yaml')
+
+    

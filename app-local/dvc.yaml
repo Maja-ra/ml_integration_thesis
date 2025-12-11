@@ -4,7 +4,7 @@ stages:
     - fastapi dev api_local.py
     deps:
     - api_local.py
-    - ../models/model.onnx
+    - ../models/production/model.onnx
     - ../deploy_check.py
     params:
     - ../params.yaml:

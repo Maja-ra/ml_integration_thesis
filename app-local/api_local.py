@@ -43,7 +43,7 @@ y_column = params.data.y_column
 features_used_test = ["Gender", "Country", "Occupation", "self_employed", "family_history", "Days_Indoors", "Growing_Stress", "Changes_Habits", "Mental_Health_History", "Mood_Swings", "Coping_Struggles","Work_Interest", "Social_Weakness", "care_options"]
 test_data = ["Male","United States","Housewife","No","No","More than 2 months","No","Yes","Yes","Medium","No","Maybe","Maybe","No"]
 
-model_file = "../models/model.onnx"            
+model_file = "../models/production/model.onnx"            
 
 title = "MLIntegrationApp"
 

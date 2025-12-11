@@ -525,8 +525,8 @@ stages:
     deps:
     - path: deploy_check.py
       hash: md5
-      md5: 93853ad78ec28690504f17702d4d7e3f
-      size: 2792
+      md5: 1e6a2e70b4b68433d047ba0fa60e8a3d
+      size: 3494
     - path: results/evaluate/model_performance.json
       hash: md5
       md5: f1a367a87bc66ad7fb1ae41a95509d29
@@ -547,6 +547,8 @@ stages:
           env: production
           model_baseline: 0.7
           drift_threshhold: 0.1
+          prod_model_path: production
+          prod_model: model.onnx
         evaluate:
           conf_matrix: yes
           expl_plot: yes

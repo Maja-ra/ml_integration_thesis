@@ -35,7 +35,7 @@ numerical_features = [col for col in features_used if col not in categorical_fea
 num_numerical_features = num_features - num_categorical_features 
 y_column = params["data"]["y_column"]
 
-model_file = "./models/model.onnx"              # ohne docker:  /models/model.onnx
+model_file = "./models/production/model.onnx"              # ohne docker:  /models/model.onnx
 
 title = "MLIntegrationApp"
 

@@ -1,0 +1,2 @@
+[2025-12-11 15:21:11,601] 62 root - INFO - starting API APP and inference session
+[2025-12-11 15:21:11,616] 80 root - ERROR - You need to provide export name with export_name argument or EVIDENTLY_TRACE_COLLECTOR_EXPORT_NAME env variable

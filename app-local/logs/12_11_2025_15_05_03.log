@@ -1,0 +1,2 @@
+[2025-12-11 15:05:03,303] 62 root - INFO - starting API APP and inference session
+[2025-12-11 15:05:03,310] 65 root - ERROR - [ONNXRuntimeError] : 3 : NO_SUCHFILE : Load model from models/model.onnx failed:Load model models/model.onnx failed. File doesn't exist

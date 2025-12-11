@@ -1,0 +1,8 @@
+[2025-12-11 15:20:21,334] 62 root - INFO - starting API APP and inference session
+[2025-12-11 15:20:22,576] 84 uvicorn.error - INFO - Started server process [27276]
+[2025-12-11 15:20:22,578] 48 uvicorn.error - INFO - Waiting for application startup.
+[2025-12-11 15:20:22,594] 62 uvicorn.error - INFO - Application startup complete.
+[2025-12-11 15:20:46,108] 264 uvicorn.error - INFO - Shutting down
+[2025-12-11 15:20:46,219] 67 uvicorn.error - INFO - Waiting for application shutdown.
+[2025-12-11 15:20:46,221] 76 uvicorn.error - INFO - Application shutdown complete.
+[2025-12-11 15:20:46,222] 94 uvicorn.error - INFO - Finished server process [27276]

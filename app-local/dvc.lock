@@ -4,14 +4,18 @@ stages:
     cmd:
     - fastapi dev api_local.py
     deps:
-    - path: ../models/model.onnx
+    - path: ../deploy_check.py
+      hash: md5
+      md5: e106c5a7111cb4a83873fe62f2324603
+      size: 3496
+    - path: ../models/production/model_prod.onnx
       hash: md5
       md5: ab600a4792f15bb51b3adae064e46458
       size: 111400
     - path: api_local.py
       hash: md5
-      md5: 5f24151b02b29c7613d6abef73f15584
-      size: 6784
+      md5: 463632b5d7ca0d19ed1b45cccb1bea09
+      size: 6795
     params:
       ../params.yaml:
         base:
@@ -79,4 +83,6 @@ stages:
           model_performance: model_performance.json
           model_onnx: model.onnx
   update-dvc:
-    cmd: dvc push
+    cmd:
+    - dvc commit
+    - dvc push

@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, create_model, PrivateAttr
 import onnxruntime as rt
 from box import ConfigBox                       # docker problem mit import
@@ -43,7 +44,7 @@ y_column = params.data.y_column
 features_used_test = ["Gender", "Country", "Occupation", "self_employed", "family_history", "Days_Indoors", "Growing_Stress", "Changes_Habits", "Mental_Health_History", "Mood_Swings", "Coping_Struggles","Work_Interest", "Social_Weakness", "care_options"]
 test_data = ["Male","United States","Housewife","No","No","More than 2 months","No","Yes","Yes","Medium","No","Maybe","Maybe","No"]
 
-model_file = "../models/production/model.onnx"            
+model_file = "../models/production/model_prod.onnx"            
 
 title = "MLIntegrationApp"
 
@@ -139,6 +140,19 @@ try:
 except Exception as e:
     logging.error(e)
     raise customexception(e,sys)  
+
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/test/")

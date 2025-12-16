@@ -14,8 +14,8 @@ stages:
       size: 111400
     - path: api_local.py
       hash: md5
-      md5: 463632b5d7ca0d19ed1b45cccb1bea09
-      size: 6795
+      md5: cb84edb4125c5174df1a98c44d2da86f
+      size: 7081
     params:
       ../params.yaml:
         base:

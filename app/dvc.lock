@@ -107,8 +107,8 @@ stages:
       size: 111400
     - path: api.py
       hash: md5
-      md5: b3394f973411485356ea11ca99853460
-      size: 5673
+      md5: 9a027382da246678397d538c0ea6bee4
+      size: 5959
     params:
       params.yaml:
         docker:

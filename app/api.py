@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, create_model, PrivateAttr
 import onnxruntime as rt
 # from box import ConfigBox                       # docker problem mit import
@@ -35,7 +36,7 @@ numerical_features = [col for col in features_used if col not in categorical_fea
 num_numerical_features = num_features - num_categorical_features 
 y_column = params["data"]["y_column"]
 
-model_file = "./models/production/model.onnx"              # ohne docker:  /models/model.onnx
+model_file = "./models/production/model_prod.onnx"              # ohne docker:  /models/model.onnx
 
 title = "MLIntegrationApp"
 
@@ -128,6 +129,19 @@ try:
 except Exception as e:
     logging.error(e)
     raise customexception(e,sys)  
+
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/test/")

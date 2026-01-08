@@ -3,7 +3,7 @@
 # options: https://adr.github.io/adr-templates/
 ---
 
-# 008 Erstelle einzelne Services für Pipelineschritte
+# 004 Führe Versionierungen auf Dagshub zusammen
 
 ## Kontext and Problem-Statement
 
@@ -12,26 +12,24 @@ Code-, Daten- und Modell- hängen miteinander zusammen, werden aber getrennt ver
 <!-- This is an optional element. Feel free to remove. -->
 ## Entscheidungstreiber
 
-* Fehlererkennung und Debugging
-* Unterstützung von Änderungen
-* Ausführung von Teilschritten
-* Testbarkeit
-* Skalierung
+* Unübersichtliche, verteilte Metadaten-Sammlungen
+* Zusammenhängende Dokumentation
 
 ## Betrachtete Optionen
 
-* Erstelle einzelne Services für Pipelineschritte
-* Erstelle eine Datei für ETL- und Training-Pipeline
+* Führe Versionierungen auf Dagshub zusammen
 
 ## Entscheidungsergebnis
 
-Ausgewählte Option: "Erstelle einzelne Services für Pipelineschritte", weil besseres Debugging, Änderungsmanagement und unabhängige Ausführung aller Schritte möglich ist.  
+Ausgewählte Option: "Führe Versionierungen auf Dagshub zusammen", weil alle erfassten Mertadaten zusammen dargestellt sowie schnell und übersichtlich einsehbar sind. Ermöglicht die Integration von DVC und MLFlow. 
+
+## Beinflussende Empfehlungen
+
+* 3.14
+* 11.11
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
 * Gut, weil es die Wartbarkeit verbessert.
-* Gut, weil es die Zuverlässigkeit verbessert.
-* Gut, weil es Skalierbarkeit verbessert.
-* Gut, weil es das Debugging verbessert.
-* Schelcht, weil es Orchestrierung aufwendiger macht.
+* Gut, weil es die Nachvollziehbarkeit verbessert.

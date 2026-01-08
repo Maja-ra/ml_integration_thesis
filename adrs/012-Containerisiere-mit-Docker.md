@@ -29,6 +29,11 @@
 
 Ausgewählte Option: "Containerisiere mit Docker", weil eine konsistente, plattformunabhängige, modulare Umgebung erschaffen wird sowie sich bessere Möglichkeiten zur Orchestrierung und für CI/CD ergeben.
 
+## Beinflussende Empfehlungen
+
+* 8.10
+* 10.1
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
@@ -38,5 +43,5 @@ Ausgewählte Option: "Containerisiere mit Docker", weil eine konsistente, plattf
 * Gut, weil es die Ressourceneffizienz verbessert.
 * Schlecht, weil sich dich Komplexität der Orchestrierung erhöht.
 * Schlecht, weil neue Sicherheitslücken entstehen.
-* Schlecht, weil die Perfermance sich verschlechtert.
+* Schlecht, weil die Performance sich verschlechtert.
 * Neutral, weil Isolierung geringer als bei vollständigen Betriebssystemen.

@@ -25,6 +25,13 @@ Die generierten Vorhersage Daten werden abgelegt. Können diese Daten analysiert
 
 Ausgewählte Option: "Visualisiere Vorhersagen mit Evidently ", weil transparent und übersichtlich das Modellverhalten und die Ergebnisse kommuniziert werden können. Weil Weiterverwendungen identifiziert werden können.  
 
+## Beinflussende Empfehlungen
+
+* 4.12
+* 7.13
+* 11.1
+* 11.4
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 

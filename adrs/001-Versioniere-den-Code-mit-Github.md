@@ -26,9 +26,15 @@ Für neue Funktionen wird neuer Code geschrieben. Wie wird dieser verwaltet?
 
 Ausgewählte Option: "Versioniere den Code mit Github", weil Code u. a. getrennt entwickelt, dokumentiert, automatsisiert, geteilt sowie rückgängig gemacht werden kann und es frei zur Verfügung steht.  
 
+## Beinflussende Empfehlungen
+
+* 7.19
+* 11.9
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
 * Gut, weil es die Wartbarkeit verbessert.
 * Gut, weil es die Kollaboration verbessert.
-* Gut, weil es die Adaptability verbessert.
+* Gut, weil es die Reproduzierbarkeit verbessert.
+* Gut, weil es die Anpassungsfähigkeit verbessert.

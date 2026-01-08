@@ -28,6 +28,12 @@ Mehrer Algorithmen können Vorhersage durchführen. Welcher Alorithmus soll verw
 
 Ausgewählte Option: "Benutze Gradient-Boost-Klassifizierer", weil der Klassifizierer die beste Modell-Performance liefert und Erklärbarkeit ermöglicht. 
 
+## Beinflussende Empfehlungen
+
+* 4.9
+* 4.10
+* 7.2
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 

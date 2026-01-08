@@ -25,6 +25,11 @@ Das Modell erstellt eine Vorhersage basierend auf den Input-Daten. Was wurde vor
 
 Ausgewählte Option: "Speichere Vorhersageergebnisse mit Abhängigkeiten", weil das Modellverhalten dadurch überwacht und neue Auswertungen erstellt werden können.  
 
+## Beinflussende Empfehlungen
+
+* 9.7
+* 11.4
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 

@@ -25,9 +25,14 @@ Mit neuen Daten kann das Modell neu trainiert werden. Ist die Performance des Mo
 
 Ausgewählte Option: "Führe Threshhold für Modellperformance ein", weil die Anzahl an Deployments verringert und eine bestimmtes Performance-Level des Modells gewährleistet wird.  
 
+## Beinflussende Empfehlungen
+
+* 4.7
+* 8.10
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
 * Gut, weil es die Performance verbessert.
-* Gut, weil es die Availability verbessert.
+* Gut, weil es die Verfügbarkeit verbessert.
 * Gut, weil es Ressourceneffizienz verbessert.

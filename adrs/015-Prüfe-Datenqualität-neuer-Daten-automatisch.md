@@ -22,9 +22,18 @@ Viel Fehelerpotenzial existiert in Datensätzen, von denen das die Modellperform
 * Gewährleiste Datenqualität vor dem Einspeisen
 * Überprüfe Datenqualität nicht
 
-## Entscheidungsergebnis
+## Beinflussende Empfehlungen
 
 Ausgewählte Option: "Prüfe Datenqualität neuer Daten automatisch", weil dadurch eine zuverlässige Grundlage für Modelltraining gesichert wird und manuelle Arbeitsschritte entfallen. 
+
+## Betroffene Empfehlungen
+
+* 3.1
+* 3.2
+* 3.12
+* 4.12
+* 4.18
+* 8.4
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen

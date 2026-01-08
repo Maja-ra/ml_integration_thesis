@@ -26,12 +26,17 @@ Die Open-Source-Software benutzt das ML-Modell um Vorhersagen zu treffen. Wie is
 
 Ausgewählte Option: "Stelle Modell mit FastAPI als API zur Verfügung", weil alle erfassten Mertadaten zusammen dargestellt sowie schnell und übersichtlich einsehbar sind. Ermöglicht die Integration von DVC und MLFlow. 
 
+## Beinflussende Empfehlungen
+
+* 9.8
+* 10.5
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
 * Gut, weil es die Skalierbarkeit verbessert.
 * Gut, weil es die Wiederverwendbarkeit verbessert.
 * Gut, weil es die Performance verbessert.
-* Gut, weil es die Adaptability verbessert.
+* Gut, weil es die Anpassungsfähigkeit verbessert.
 * Schlecht, weil es die Entwicklungszeit verlängert.
 * Schlecht, weil es den Netzwerk-Overhead erhöht.

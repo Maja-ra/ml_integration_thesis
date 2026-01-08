@@ -26,6 +26,14 @@ Prozesschritte bauen aufeinander auf und müssen in betsimmter Reihenfolge durch
 
 Ausgewählte Option: "Automatisiere Pipeline mit DVC", weil Abhängigkeiten erfasst werden, Fehler gemeldet werden, nur notwendige Phasen ausgeführt werden und der Ablauf wiederhoöbar definiert ist. 
 
+## Beinflussende Empfehlungen
+
+* 3.12
+* 4.8
+* 4.13
+* 8.7
+* 9.1
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 

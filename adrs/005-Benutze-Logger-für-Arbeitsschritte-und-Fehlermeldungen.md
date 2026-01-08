@@ -22,6 +22,11 @@ Viele Prozessschritte mit Fehlerpotenzial. Welche Schritte wurden ausgeführt? W
 
 Ausgewählte Option: "Benutze Logger für Arbeitsschritte und Fehlermeldungen", weil damit alle Vorgänge und Fehler während der Durchführung einfach verfolgt werden können.
 
+## Beinflussende Empfehlungen
+
+* 4.12
+* 8.7
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 

@@ -22,11 +22,19 @@ Das Vorhersagemodell wird gespeichert und anschließend in einer Runtime initial
 
 * Exportiere finales Modell im ONNX-Format
 * Exportiere finales Modell im Pickle-Format
-* Exportiere finales Modell im -Format
+* Exportiere finales Modell im SavedModel-Format
+* Exportiere finales Modell im TorchScript-Format
+* Exportiere finales Modell im Joblib-Format
 
 ## Entscheidungsergebnis
 
 Ausgewählte Option: "Exportiere finales Modell im ONNX-Format", weil das Fromat zusätzlich zu guter Performance bei der Initialisierung und Inferenz unabhängig von der Plattform konsistent funktioniert sowie weniger Sicherheitslücken ausfweist. 
+
+## Beinflussende Empfehlungen
+
+* 9.6
+* 10.2
+* 10.5
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen

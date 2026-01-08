@@ -23,9 +23,13 @@ Experimente werden anders gemanaged als das Modell in der Entwicklung. Werden Ex
 
 Ausgewählte Option: "Trenne Experimente von Deployment Pipeline", weil dadurch unabhängig vom Deployment experimentiert werden kann und weniger weniger Deployment-Risiken entstehen.
 
+## Beinflussende Empfehlungen
+
+* 5.2
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
 * Gut, weil es die Wartbarkeit verbessert.
 * Gut, weil es die Zuverlässigkeit verbessert.
-* Schlecht, weil es doppelte Codeanteile erhöht.
+* Schlecht, weil es duplizierte Codeanteile erhöht.

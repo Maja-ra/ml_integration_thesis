@@ -25,10 +25,18 @@ Input-Daten und Daten-Artefakte änderen sich oft in einem iterativen MLOps-Proz
 
 Ausgewählte Option: "Datenversionen mit DVC tracken", weil Änderungen der Daten erkannt werden, DVC-Dateien nur die Änderung beinhalten und die Funktionen ähnlich wie Git in den Versionierungsprozess integriert werden können. 
 
+## Beinflussende Empfehlungen
+
+* 3.13
+* 7.19
+* 8.2
+* 9.5
+* 11.9
+
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
 * Gut, weil es die Zuverlässigkeit verbessert.
-* Gut, weil es die Adaptability verbessert.
+* Gut, weil es die Anpassungsfähigkeit verbessert.
 * Gut, weil es die Nachvollziehbarkeit verbessert.
 * Gut, weil es die Reproduzierbarkeit verbessert.

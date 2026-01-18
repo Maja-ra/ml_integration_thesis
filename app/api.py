@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, create_model, PrivateAttr
 import onnxruntime as rt
@@ -15,6 +15,7 @@ from tracely import trace_event
 from tracely import create_trace_event
 from dotenv import load_dotenv
 import os
+import pymysql.cursors
 
 load_dotenv("./environments/prod.env")
 
@@ -22,6 +23,10 @@ EVIDENTLY_API_KEY = os.getenv("EVIDENTLY_API_KEY")
 EVIDENTLY_PROJECT_ID = os.getenv("EVIDENTLY_PROJECT_ID")
 EVIDENTLY_URL = os.getenv("EVIDENTLY_URL")
 TRACING_EXPORT_NAME = os.getenv("TRACING_EXPORT_NAME")
+SQL_HOST = os.getenv("SQL_HOST")
+SQL_USER = os.getenv("SQL_USER")
+SQL_PASSWORD = os.getenv("SQL_PASSWORD")
+SQL_DATABASE = os.getenv("SQL_DATABASE")
 
 yaml = YAML(typ="safe")
 
@@ -36,6 +41,11 @@ numerical_features = [col for col in features_used if col not in categorical_fea
 num_numerical_features = num_features - num_categorical_features 
 y_column = params["data"]["y_column"]
 
+learning_rate = params["train"]["learning_rate"]
+max_depth = params["train"]["max_depth"]
+n_estimators = params["train"]["n_estimators"]
+model_type = params["train"]["model_type"]
+
 model_file = "./models/production/model_prod.onnx"              # ohne docker:  /models/model.onnx
 
 title = "MLIntegrationApp"
@@ -45,7 +55,7 @@ Gives access to ML-Model prediction for masters thesis. 🚀
 
 ## Info
 
-Model type is: 
+Model type is:  Gradient Boost
 """
 
 ############################## initialize session and tracing
@@ -113,10 +123,22 @@ class DataModel(BaseModel):
     Social_Weakness: str
     care_options: str
 
+class ResponseModel(BaseModel):
+    prediction: int
+
+class ModelData(BaseModel):
+    learning_rate: float
+    max_depth: int
+    n_estimators: int
+    model_type: str
 
 # DynamicDataModel = create_model(
 
 # )
+
+class HealthCheck(BaseModel):
+
+    status: str = "OK"
 
 #################################################
 
@@ -154,8 +176,82 @@ def create_foo(data: DataModel):
 def root():
     return {'message': 'Welcome to the ML API. Documentation at /docs.'}
 
+@app.get('/features')
+async def get_features_options():
 
-@app.post("/predict/")
+    try:
+
+        # Connect to the database
+        connection = pymysql.connect(host='host.docker.internal',
+                             user=SQL_USER,
+                             password=SQL_PASSWORD,
+                             database=SQL_DATABASE,
+                             cursorclass=pymysql.cursors.DictCursor)
+
+        options = {}
+        with connection:
+            with connection.cursor() as cursor:
+                for feature in features_used:
+                    table_name = feature + "_info"
+                    sql = f"SELECT * FROM {table_name}"
+                    cursor.execute(sql)
+                    result = cursor.fetchall()
+                    r_list = [row[feature] for row in result]
+                    options[feature] = r_list
+
+        # for feature in features_used:
+        #     table_name = feature + "_info"
+        #     mydb.query(f"SELECT * FROM {table_name}")
+        #     r=mydb.store_result()
+        #     r = r.fetch_row(maxrows=0)
+        #     r_list = [value[0].decode() for value in r]
+        #     options[feature] = r_list
+
+        #print(options)
+
+        logging.info("Get features options")
+
+        return options
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys)  
+    
+@app.get('/model_metadata', 
+    response_model=ModelData
+)
+async def get_model_info():
+    modelData = ModelData(
+    learning_rate = learning_rate,
+    max_depth = max_depth,
+    n_estimators = n_estimators,
+    model_type = model_type
+    )
+
+    return modelData
+
+@app.get(
+    "/health",
+    summary="Perform a Health Check",
+    response_description="Return HTTP Status Code 200 (OK)",
+    status_code=status.HTTP_200_OK,
+    response_model=HealthCheck,
+)
+async def health():
+    # HealthCheck: Returns a JSON response with the health status
+    logging.info("Perform health check")
+    return HealthCheck(status="OK")
+
+# @app.get('/health-extended')
+# async def health_extended():
+#     return 200
+
+
+
+@app.post("/predict/",
+    summary="Perform prediction",
+    response_description="Return the result of the prediciton (0 or 1)",
+    response_model=ResponseModel,
+)
 async def create_upload_file(input_data: DataModel, request: Request):
     url = str(request.url)
     method = str(request.scope["method"])
@@ -173,14 +269,12 @@ async def create_upload_file(input_data: DataModel, request: Request):
 
     result = make_inference(input_list)
 
-    result_dict = {
-        "prediction": result.tolist()[0]           #result is np.ndarray -> to list to make iterable
-    }
-
     log_dict = {
         "prediction": result.tolist()[0],
         "input": input_data_dict       
     }
+
+    response = ResponseModel(prediction = result.tolist()[0])                   #result is np.ndarray -> to list to make iterable
 
     trace_id = str(uuid4())
 
@@ -197,7 +291,7 @@ async def create_upload_file(input_data: DataModel, request: Request):
 
     logging.info("Prediction: %s", log_dict)
 
-    return result_dict
+    return response
 
 # spelling mistake in string is no problem
 # additional unrequired field also not

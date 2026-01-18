@@ -17,6 +17,13 @@ stages: # for docker production deployment
     - docker compose up -d
     #- docker run --name ${docker.local_container} -d --restart=always -p 8000:8000 ${docker.local_image_name}
     always_changed: true
+  integration-test:
+    cmd: 
+    - python -m pytest ../tests/integration_tests.py
+    deps:
+    - ../tests/integration_tests.py
+    - api.py
+    always_changed: true
   update-dvc:
     cmd: 
     - dvc commit

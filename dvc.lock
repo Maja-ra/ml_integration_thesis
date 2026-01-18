@@ -9,8 +9,8 @@ stages:
       size: 24647848
     - path: src/clean_data.py
       hash: md5
-      md5: 56df5e84d6cb5781fa27564e5ea9ca60
-      size: 2224
+      md5: 03d6f88ecbf43682e4ce2c6082ed0c90
+      size: 4743
     params:
       params.yaml:
         data:
@@ -252,6 +252,7 @@ stages:
           max_depth: 9
           model_pkl: model.pkl
           n_estimators: 9
+          model_type: Gradient Boost
     outs:
     - path: models/model.pkl
       hash: md5

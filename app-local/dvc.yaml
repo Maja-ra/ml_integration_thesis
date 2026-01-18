@@ -11,6 +11,14 @@ stages:
       - base
       - data
       - evaluate
+    always_changed: true
+  # integration-test:
+  #   cmd: 
+  #   - pytest ../tests/integration_tests.py
+  #   deps:
+  #   - ../tests/integration_tests.py
+  #   - api_local.py
+  #   always_changed: true
   update-dvc:
     cmd: 
     - dvc commit

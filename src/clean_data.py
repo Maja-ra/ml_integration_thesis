@@ -16,6 +16,7 @@ SQL_HOST = os.getenv("SQL_HOST")
 SQL_USER = os.getenv("SQL_USER")
 SQL_PASSWORD = os.getenv("SQL_PASSWORD")
 SQL_DATABASE = os.getenv("SQL_DATABASE")
+SQL_DATABASE_FEATURES = os.getenv("SQL_DATABASE_FEATURES")
 
 yaml = YAML(typ="safe")
 
@@ -111,6 +112,31 @@ def saveDataOptionsSQL(cleanData):
         logging.error(e)
         raise customexception(e,sys)
 
+def saveDataFeatures(cleanData):
+    
+    try:
+        mydb = _mysql.connect(
+            user= SQL_USER,
+            password= SQL_PASSWORD,
+        )
+
+        #mycursor = mydb.cursor()                                               #using db connector instead of mysqlclient
+        #mycursor.execute(f"CREATE DATABASE IF NOT EXISTS {SQL_DATABASE}")
+        mydb.query(f"CREATE DATABASE IF NOT EXISTS {SQL_DATABASE_FEATURES}")
+
+        engine_string = f'mysql+mysqldb://{SQL_USER}:{SQL_PASSWORD}@{SQL_HOST}/{SQL_DATABASE_FEATURES}'
+        cnx = create_engine(engine_string)  
+
+
+        cleanData.to_sql('mental_health', cnx, if_exists='replace', index = False)
+        
+
+
+    except Exception as e:
+        logging.error(e)
+        raise customexception(e,sys)
+    
+
 if __name__ == "__main__":
     logging.info("starting data cleaning:")
 
@@ -120,3 +146,4 @@ if __name__ == "__main__":
     df = removeNanRows(df)
     saveDataOptionsSQL(df)
     saveCleanData(df)
+    saveDataFeatures(df)

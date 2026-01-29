@@ -29,10 +29,11 @@ Ausgewählte Option: "Führe Threshhold für Modellperformance ein", weil die An
 
 * 4.7
 * 8.10
+* 13.8
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
-* Gut, weil es die Performance verbessert.
+* Gut, weil es die Modellgüte verbessert.
 * Gut, weil es die Verfügbarkeit verbessert.
 * Gut, weil es Ressourceneffizienz verbessert.

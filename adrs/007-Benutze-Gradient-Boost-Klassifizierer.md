@@ -38,5 +38,5 @@ Ausgewählte Option: "Benutze Gradient-Boost-Klassifizierer", weil der Klassifiz
 ### Konsequenzen
 
 * Gut, weil es die Erklärbarkeit verbessert.
-* Gut, weil es die Performance Efficiency verbessert.
+* Gut, weil es die Modellgüte verbessert.
 * Schlecht, weil Erklärbarkeit einzelner Features gespalten sind.

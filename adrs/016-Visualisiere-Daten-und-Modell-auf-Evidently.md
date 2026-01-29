@@ -42,5 +42,5 @@ Ausgewählte Option: "Visualisiere Daten und Modelle auf Evidently", weil Report
 
 * Gut, weil es die Wartbarkeit verbessert.
 * Gut, weil es die Nachvollziehbarkeit verbessert.
-* Gut, weil es die Rückverfolgbarkeit verbessert.
+* Gut, weil es die Erklärbarkeit verbessert.
 * Schlecht, weil es eine weitere technologische Abhängigkeit hinzufügt.

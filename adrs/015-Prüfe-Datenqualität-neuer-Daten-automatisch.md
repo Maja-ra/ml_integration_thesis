@@ -34,9 +34,13 @@ Ausgewählte Option: "Prüfe Datenqualität neuer Daten automatisch", weil dadur
 * 4.12
 * 4.18
 * 8.4
+* 13.5
+* 13.8
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
 * Gut, weil es die Performance verbessert.
+* Gut, weil es die Datenqualität verbessert.
 * Gut, weil es die Zuverlässigkeit verbessert.
+* Gut, weil es die Datenintegrität verbessert.

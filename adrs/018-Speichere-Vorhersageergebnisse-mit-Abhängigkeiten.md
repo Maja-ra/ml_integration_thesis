@@ -29,6 +29,7 @@ Ausgewählte Option: "Speichere Vorhersageergebnisse mit Abhängigkeiten", weil 
 
 * 9.7
 * 11.4
+* 13.13
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen

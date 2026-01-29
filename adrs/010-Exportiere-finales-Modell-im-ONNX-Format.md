@@ -40,7 +40,7 @@ Ausgewählte Option: "Exportiere finales Modell im ONNX-Format", weil das Fromat
 ### Konsequenzen
 
 * Gut, weil es die Sicherheit verbessert.
-* Gut, weil es die Flexibilität verbessert.
+* Gut, weil es die Interoperabilität verbessert.
 * Gut, weil es die Zuverlässigkeit verbessert.
 * Gut, weil es die Performance verbessert.
 * Schlecht, weil zusätzliches Risiko für Fehler durch Transformationen entsteht.

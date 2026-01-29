@@ -32,6 +32,7 @@ Ausgewählte Option: "Überprüfe Daten auf Datendrift mit standardisierter Auwe
 * 8.4 
 * 11.1
 * 11.5
+* 13.5
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen

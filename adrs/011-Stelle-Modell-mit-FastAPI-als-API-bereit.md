@@ -38,5 +38,6 @@ Ausgewählte Option: "Stelle Modell mit FastAPI als API zur Verfügung", weil al
 * Gut, weil es die Wiederverwendbarkeit verbessert.
 * Gut, weil es die Performance verbessert.
 * Gut, weil es die Anpassungsfähigkeit verbessert.
+* Gut, weil es die Interoperabilität verbessert.
 * Schlecht, weil es die Entwicklungszeit verlängert.
 * Schlecht, weil es den Netzwerk-Overhead erhöht.

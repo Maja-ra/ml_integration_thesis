@@ -26,6 +26,7 @@ Ausgewählte Option: "Benutze Logger für Arbeitsschritte und Fehlermeldungen", 
 
 * 4.12
 * 8.7
+* 13.4
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen

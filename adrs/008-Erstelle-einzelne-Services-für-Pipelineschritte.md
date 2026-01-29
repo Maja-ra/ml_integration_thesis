@@ -40,4 +40,4 @@ Ausgewählte Option: "Erstelle einzelne Services für Pipelineschritte", weil be
 * Gut, weil es die Zuverlässigkeit verbessert.
 * Gut, weil es Skalierbarkeit verbessert.
 * Gut, weil es das Debugging verbessert.
-* Schelcht, weil es Orchestrierung aufwendiger macht.
+* Schlecht, weil es die Orchestrierung aufwendiger macht.

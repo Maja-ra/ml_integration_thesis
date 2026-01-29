@@ -28,6 +28,7 @@ Ausgewählte Option: "Definiere Schnittstellen-Data Contracts für API", weil Da
 
 * 3.11
 * 4.17
+* 13.8
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen

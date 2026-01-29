@@ -43,5 +43,5 @@ Ausgewählte Option: "Stelle Modell als Mircroservice bereit", weil es dadurch s
 * Gut, weil es die Anpassungsfähigkeit verbessert.
 * Schlecht, weil es den Netzwerk-Overhead erhöht.
 * Schlecht, weil es die Komplexität erhöht.
-* Schlecht. weil robustes Monitoring notwendig.
+* Schlecht. weil robustes Monitoring notwendig ist.
 * Schlecht, weil es die Sicherheit verschlechtert.

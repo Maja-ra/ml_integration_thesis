@@ -19,9 +19,9 @@ stages: # for docker production deployment
     always_changed: true
   integration-test:
     cmd: 
-    - python -m pytest ../tests/integration_tests.py
+    - python -m pytest ../tests/test_api.py
     deps:
-    - ../tests/integration_tests.py
+    - ../tests/test_api.py
     - api.py
     always_changed: true
   update-dvc:

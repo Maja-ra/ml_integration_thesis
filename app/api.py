@@ -1,21 +1,20 @@
+from uuid import UUID, uuid4
+import sys
+import os
+from typing import Optional
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, create_model, PrivateAttr
+from pydantic import BaseModel #, create_model, PrivateAttr
 import onnxruntime as rt
 # from box import ConfigBox                       # docker problem mit import
 from ruamel.yaml import YAML
-from uuid import UUID, uuid4
-from typing import Optional
-import sys
-import pandas as pd
+from tracely import init_tracing
+#from tracely import trace_event
+from tracely import create_trace_event
+import pymysql.cursors
 from ..src.logger.logger import logging                 # ohne docker ohne punkt
 from ..src.exception.exception import customexception
-from tracely import init_tracing
-from tracely import trace_event
-from tracely import create_trace_event
-from dotenv import load_dotenv
-import os
-import pymysql.cursors
 
 load_dotenv("./environments/prod.env")
 
@@ -27,7 +26,6 @@ SQL_HOST = os.getenv("SQL_HOST")
 SQL_USER = os.getenv("SQL_USER")
 SQL_PASSWORD = os.getenv("SQL_PASSWORD")
 SQL_DATABASE = os.getenv("SQL_DATABASE")
-
 yaml = YAML(typ="safe")
 
 with open("./params.yaml") as f :                 #with open("params.yaml") as f : (ohne Docker)
@@ -40,17 +38,13 @@ num_categorical_features = len(categorical_features)
 numerical_features = [col for col in features_used if col not in categorical_features]
 num_numerical_features = num_features - num_categorical_features 
 y_column = params["data"]["y_column"]
-
 learning_rate = params["train"]["learning_rate"]
 max_depth = params["train"]["max_depth"]
 n_estimators = params["train"]["n_estimators"]
 model_type = params["train"]["model_type"]
-
-model_file = "./models/production/model_prod.onnx"              # ohne docker:  /models/model.onnx
-
-title = "MLIntegrationApp"
-
-description = """
+MODEL_FILE = "./models/production/model_prod.onnx"              # ohne docker:  /models/model.onnx
+TITLE = "MLIntegrationApp"
+DESCRIPTION = """
 Gives access to ML-Model prediction for masters thesis. 🚀
 
 ## Info
@@ -62,12 +56,12 @@ Model type is:  Gradient Boost
 
 try:
     logging.info("starting API APP and inference session")
-    session = rt.InferenceSession(model_file, providers=rt.get_available_providers())               # load model and run session
+    session = rt.InferenceSession(MODEL_FILE, providers=rt.get_available_providers())               # load model and run session
 except Exception as e:
     logging.error(e)
     raise customexception(e,sys)  
 
-ml_sess_id = 1
+ML_SESS_ID = 1
 
 try:
 # Initialize tracing
@@ -87,7 +81,7 @@ def make_inference(input):
     try:
     
         input_name = session.get_inputs()[0].name 
-        output_name = session.get_outputs()[0].name 
+        # output_name = session.get_outputs()[0].name 
 
         #pred_onx = session.run(None, {input_name: X_test[0:1].astype(np.float32)})[0] # without preprocessing
         pred = session.run(None, {input_name: [input]})[0]
@@ -97,8 +91,6 @@ def make_inference(input):
         logging.error(e)
         raise customexception(e,sys)  
     
-def savePredInfo(filepath, df):
-    pass
     
 
 class DataModel(BaseModel):
@@ -144,8 +136,8 @@ class HealthCheck(BaseModel):
 
 try:
     app = FastAPI(
-        title = title,
-        description = description,
+        title = TITLE,
+        description = DESCRIPTION,
         version = "0.0.1"
     )
 except Exception as e:
@@ -286,7 +278,7 @@ async def create_upload_file(input_data: DataModel, request: Request):
         event.set_attribute("prediction", result.tolist()[0])
         event.set_attribute("prediction_label", y_column)
         # event.set_attribute("prediction", "0")
-        event.set_attribute("ml_session_id", ml_sess_id)
+        event.set_attribute("ml_session_id", ML_SESS_ID)
 
 
     logging.info("Prediction: %s", log_dict)

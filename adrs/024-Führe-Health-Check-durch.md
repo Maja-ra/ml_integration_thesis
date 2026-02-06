@@ -33,3 +33,4 @@ Ausgewählte Option: "Führe Health Check durch", weil basierend auf dem Ergebni
 
 * Gut, weil es die Usability verbessert.
 * Gut, weil es die Robustheit verbessert.
+* Gut, weil es die Zuverlässigkeit verbessert.

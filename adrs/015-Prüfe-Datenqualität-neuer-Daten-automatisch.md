@@ -43,4 +43,3 @@ Ausgewählte Option: "Prüfe Datenqualität neuer Daten automatisch", weil dadur
 * Gut, weil es die Performance verbessert.
 * Gut, weil es die Datenqualität verbessert.
 * Gut, weil es die Zuverlässigkeit verbessert.
-* Gut, weil es die Datenintegrität verbessert.

@@ -32,3 +32,5 @@ Ausgewählte Option: "Benutze Logger für Arbeitsschritte und Fehlermeldungen", 
 ### Konsequenzen
 
 * Gut, weil es das Debugging verbessert.
+* Gut, weil es die Robustheit verbessert.
+* Gut, weil es die Sicherheit verbessert.

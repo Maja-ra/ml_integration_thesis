@@ -39,7 +39,8 @@ Ausgewählte Option: "Lagere Parameter aus und passe dynamisch an", weil Paramet
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
-* Gut, weil es die Anpassungsfähigkeit verbessert.
+* Gut, weil es die Änderbarkeit verbessert.
 * Gut, weil es die Datenintegrität verbessert.
 * Gut, weil es Nachvollziehbarkeit verbessert.
+* Gut, weil es die Anpassungsfähigkeit verbessert.
 * Schlecht, weil es die Komplexität erhöht.

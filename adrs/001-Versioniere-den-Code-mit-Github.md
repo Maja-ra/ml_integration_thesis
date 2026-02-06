@@ -37,4 +37,5 @@ Ausgewählte Option: "Versioniere den Code mit Github", weil Code u. a. getrennt
 * Gut, weil es die Wartbarkeit verbessert.
 * Gut, weil es die Kollaboration verbessert.
 * Gut, weil es die Reproduzierbarkeit verbessert.
-* Gut, weil es die Anpassungsfähigkeit verbessert.
+* Gut, weil es die Nachvollziehbarkeit verbessert.
+* Gut, weil es die Änderbarkeit verbessert.

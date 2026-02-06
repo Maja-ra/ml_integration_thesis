@@ -38,5 +38,4 @@ Ausgewählte Option: "Erstelle einen Klassifizierungsbericht zur Bewertung des M
 
 * Gut, weil es die Modellgüte verbessert.
 * Gut, weil es die Robustheit verbessert.
-* Schlecht, weil es die Erklärbarkeit erhöht.
-* Schlecht, weil es das Vertrauenswürdigkeit erhöht.
+* Gut, weil es die Erklärbarkeit erhöht.

@@ -37,6 +37,6 @@ Ausgewählte Option: "Datenversionen mit DVC tracken", weil Änderungen der Date
 ### Konsequenzen
 
 * Gut, weil es die Zuverlässigkeit verbessert.
-* Gut, weil es die Anpassungsfähigkeit verbessert.
+* Gut, weil es die Änderbarkeit verbessert.
 * Gut, weil es die Nachvollziehbarkeit verbessert.
 * Gut, weil es die Reproduzierbarkeit verbessert.

@@ -32,4 +32,5 @@ Ausgewählte Option: "Führe Repository für Datendefinitionen und Modell-Metada
 ### Konsequenzen
 
 * Gut, weil es die Nachvollziehbarkeit verbessert.
+* Gut, weil es die Interoperabilität verbessert.
 * Schlecht, weil es die Performance verschlechtert.

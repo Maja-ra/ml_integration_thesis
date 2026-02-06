@@ -41,6 +41,7 @@ Ausgewählte Option: "Containerisiere mit Docker", weil eine konsistente, plattf
 * Gut, weil es die Skalierbarkeit verbessert.
 * Gut, weil es die Reproduzierbarkeit verbessert.
 * Gut, weil es die Ressourceneffizienz verbessert.
+* Gut, weil es die Interoperabilität verbessert.
 * Schlecht, weil sich dich Komplexität der Orchestrierung erhöht.
 * Schlecht, weil neue Sicherheitslücken entstehen.
 * Schlecht, weil die Performance sich verschlechtert.

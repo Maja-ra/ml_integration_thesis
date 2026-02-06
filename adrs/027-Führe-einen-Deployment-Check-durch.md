@@ -33,3 +33,4 @@ Ausgewählte Option: "Führe einen Deployment-Check durch", weil dadurch die Qua
 
 * Gut, weil es die Modellgüte verbessert.
 * Gut, weil es die Robustheit verbessert.
+* Gut, weil es die Verfügbarkeit verbessert.

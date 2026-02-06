@@ -34,5 +34,6 @@ Ausgewählte Option: "Führe automatisches Retraining nach Änderung in Daten du
 * Gut, weil es die Performance verbessert.
 * Gut, weil es die Datenqualität verbessert.
 * Gut, weil es die Modellgüte verbessert.
+* Gut, weil es die Anpassungsfähigkeit verbessert.
 * Schlecht, weil es die Komplexität erhöht.
 * Schlecht, weil es das Risiko erhöht.

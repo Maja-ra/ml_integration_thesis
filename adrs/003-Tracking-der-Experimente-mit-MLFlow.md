@@ -43,4 +43,5 @@ Ausgewählte Option: "Tracking der Experimente mit MLFlow", weil es schon ausger
 * Gut, weil es die Modell-Optimierung verbessert.
 * Gut, weil es die Erklärbarkeit verbessert.
 * Gut, weil es die Reproduzierbarkeit verbessert.
+* Gut, weil es die Nachvollziehbarkeit verbessert.
 * Schlecht, weil es die Performance Efficiency der Trainingsdurchläufe verschlechtert.

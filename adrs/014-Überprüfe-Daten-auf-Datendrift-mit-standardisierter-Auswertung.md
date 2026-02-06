@@ -40,3 +40,4 @@ Ausgewählte Option: "Überprüfe Daten auf Datendrift mit standardisierter Auwe
 * Gut, weil es die Zuverlässigkeit verbessert.
 * Gut, weil es die Performance verbessert.
 * Gut, weil es die Erklärbarkeit verbessert.
+* Gut, weil es die Datenintegrität verbessert.

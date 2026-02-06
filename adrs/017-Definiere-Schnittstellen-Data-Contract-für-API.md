@@ -3,7 +3,7 @@
 # options: https://adr.github.io/adr-templates/
 ---
 
-# 017 Definiere Schnittstelle-Data Contracts für API und ML-Schritte
+# 017 Definiere Schnittstellen/Data Contracts für API und ML-Schritte
 
 ## Kontext and Problem-Statement
 
@@ -33,9 +33,10 @@ Ausgewählte Option: "Definiere Schnittstellen-Data Contracts für API", weil Da
 <!-- This is an optional element. Feel free to remove. -->
 ### Konsequenzen
 
-* Gut, weil es die Governance verbessert.
+* Gut, weil es die Wartbarkeit verbessert.
 * Gut, weil es das Debugging verbessert.
 * Gut, weil es die Zuverlässigkeit verbessert.
 * Gut, weil es die Sicherheit verbessert.
-* Gut, weil es die Anpassungsfähigkeit verbessert.
+* Gut, weil es die Änderbarkeit verbessert.
+* Gut, weil es die Testbarkeit verbessert.
 * Neutral, weil Fehlermeldungen durch Abweichungen entstehen.

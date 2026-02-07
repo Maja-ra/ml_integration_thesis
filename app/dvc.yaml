@@ -9,6 +9,7 @@ stages: # for docker production deployment
     - ../models/production/model_prod.onnx
     params:
     - docker
+    always_changed: true
   run-container: 
     params:
     - docker

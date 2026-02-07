@@ -103,12 +103,12 @@ stages:
       size: 3496
     - path: ../models/production/model_prod.onnx
       hash: md5
-      md5: ab600a4792f15bb51b3adae064e46458
-      size: 111400
+      md5: 149eeb0018d8e2ddeec004e1e382aa6e
+      size: 116082
     - path: api.py
       hash: md5
-      md5: 7b543bd22b37fed4a0e87586787729f3
-      size: 8834
+      md5: 030a12d774b746e72bd67ab1900822ea
+      size: 8765
     params:
       params.yaml:
         docker:

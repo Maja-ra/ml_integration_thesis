@@ -27,16 +27,10 @@ data:
   y_test: test_data/y_test.csv
   y_train: train_data/y_train.csv
 data_split: {test_size: 0.3}
-evaluate: {conf_matrix: yes, expl_plot: yes, metrics: metrics.json, model_performance: model_performance.json, model_onnx: model.onnx}
+environment: {drift_threshhold: 0.1, env: production, model_baseline: 0.7, model_to_copy: model.onnx,
+  prod_model: model_prod.onnx, prod_model_path: production}
+evaluate: {conf_matrix: yes, expl_plot: yes, metrics: metrics.json, model_onnx: model.onnx,
+  model_performance: model_performance.json}
 monitor: {drift_report: drift_report.json, summary_report: summary_report.json}
-train: {learning_rate: 0.1, max_depth: 9, model_pkl: model.pkl,
-  n_estimators: 9, model_type: Gradient Boost}
-environment:
-  env: production
-  model_baseline: 0.7
-  drift_threshhold: 0.1
-  prod_model_path: production
-  prod_model: model_prod.onnx
-  model_to_copy: model.onnx
-  
-
+train: {learning_rate: 0.1, max_depth: 9, model_pkl: model.pkl, model_type: Gradient
+    Boost, n_estimators: 9}
